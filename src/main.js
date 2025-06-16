@@ -6,10 +6,15 @@ import app from "./firebase";
 import router from "./router";
 const pinia = createPinia();
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faEnvelope,
+  faEye,
+  faCaretRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faPlus);
+library.add(faPlus, faEnvelope, faEye, faCaretRight);
 createApp(App)
   .use(router)
   .use(pinia)

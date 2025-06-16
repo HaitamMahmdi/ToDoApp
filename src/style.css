@@ -1,10 +1,11 @@
 @import "tailwindcss";
 @theme {
-  --color-background: #222831;
-  --color-secondary-background: #393e46;
-  --color-accent: #00adb5;
-  --color-light: #eeeeee;
-  --color-textColor: white;
+  ---color-surface: #222831;
+  --color-on-surface: #1e1e1e;
+  --color-primary: #00adb5;
+  --color-on-primary: #ffffff;
+  --color-secondary: #393e46;
+  --color-on-secondary: #eeeeee;
 
   /* Semantic Colors */
   --color-success: #22c55e;
@@ -18,6 +19,6 @@
 body {
   height: 100vh;
   margin: 0;
-  background-color: var(--color-background);
+  background-color: var(---color-surface);
   font-family: "Roboto", sans-serif;
 }

@@ -16,7 +16,7 @@ export const useAuthStore = defineStore("authStore", {
     checkAuth() {
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          this.user = user.uid;
+          this.user = user;
           console.log("user is logged-in");
         } else {
           this.user = null;
@@ -32,23 +32,22 @@ export const useAuthStore = defineStore("authStore", {
           email,
           password
         );
-        this.user = userCred.user; // ✅ fixed
+        this.user = userCred.user;
       } catch (err) {
         console.error("Sign-up error:", err.code, err.message);
       }
     },
 
     async signIn(email, password) {
-      // ✅ fixed typo
       try {
         const userCred = await signInWithEmailAndPassword(
           auth,
           email,
           password
         );
-        this.user = userCred.user; // ✅ fixed
+        this.user = userCred.user;
       } catch (err) {
-        console.error("Sign-in error:", err.code, err.message); // ✅ clearer label
+        console.error("Sign-in error:", err.code, err.message);
       }
     },
   },
