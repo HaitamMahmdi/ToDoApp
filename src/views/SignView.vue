@@ -18,6 +18,20 @@ const handleSubmit = () => {
     authStore.signUp(email.value, password.value);
   }
 };
+function validityMassage(e) {
+  if (e.target.validity.patternMismatch) {
+    const el = e.target;
+    if (el.id === `email`) {
+      el.setCustomValidity(`please Enter a vaild Email "example@gmail.com" `);
+    } else if (el.id === `password`) {
+      el.setCustomValidity(
+        `password must be at least 8 characters and 16 characters `
+      );
+    } else if (el.id === `firstName` || el.id === `lastName`) {
+      el.setCustomValidity(`your ${el.id} must Contain letters only `);
+    }
+  }
+}
 </script>
 
 <template>
@@ -30,23 +44,53 @@ const handleSubmit = () => {
         <h1 class="text-textColor text-center mb-10 text-7xl font-bold">
           {{ isLoginMode ? "signIn" : "signUp" }}
         </h1>
-        <div class="relative mb-10 w-fit mx-auto">
+        <div class="relative w-fit mx-auto">
           <input
+            @input="validityMassage"
             autocomplete="email"
-            class="border border-on-surface w-md pl-10 h-12"
+            required
+            class="border border-on-surface w-md pl-10 h-12 placeholder:font-bold placeholder:text-on-surface"
             id="email"
-            type="Email"
+            :placeholder="isLoginMode ? 'Email or User Name' : 'Email'"
+            :type="isLoginMode ? 'text' : 'Email'"
           />
           <font-awesome-icon
             class="absolute text-2xl left-2 top-3/6 transform -translate-y-2/4"
             icon="envelope"
           />
         </div>
+        <div
+          v-show="!isLoginMode"
+          class="flex w-md mx-auto my-5 flex-wrap justify-between"
+        >
+          <input
+            @input="validityMassage"
+            id="firstName"
+            required
+            pattern="^[a-z]+$"
+            type="text"
+            placeholder="First Name"
+            class="placeholder:font-bold placeholder:text-on-surface block border border-on-surface max-w-[48%] pl-10 h-12"
+          />
+          <input
+            @input="validityMassage"
+            id="lirstName"
+            required
+            type="text"
+            placeholder="Last Name"
+            class="placeholder:font-bold placeholder:text-on-surface block border border-on-surface max-w-[48%] pl-10 h-12"
+          />
+        </div>
         <div class="relative w-fit mx-auto">
           <input
+            @input="validityMassage"
+            required
             autocomplete="new-password"
-            class="border border-on-surface w-md pl-10 h-12"
+            class="border border-on-surface w-md pl-10 h-12 placeholder:font-bold placeholder:text-on-surface"
             id="password"
+            minlength="8"
+            maxlength="16"
+            placeholder="Password"
             type="password"
           />
           <font-awesome-icon
@@ -54,7 +98,23 @@ const handleSubmit = () => {
             icon="eye"
           />
         </div>
-        <div class="w-md h-2/5 pt-9 mx-auto flex flex-col justify-between">
+        <p class="w-md font-semibold text-center mx-auto mt-15">
+          {{
+            isLoginMode
+              ? "Don't have an account ?"
+              : "Already have an account ?"
+          }}
+          <span
+            @click="isLoginMode = !isLoginMode"
+            class="text-primary cursor-pointer"
+            >{{ isLoginMode ? "SignUp" : "SignIn" }}</span
+          >
+        </p>
+        <div
+          v-show="!isLoginMode"
+          class="w-md h-2/5 pt-20 mx-auto flex flex-col justify-between"
+        >
+          <input type="submit" value="ssssssssssssssssss" />
           <button
             class="ml-auto flex items-center w-28 justify-center rounded-2xl bg-on-surface p-2 cursor-pointer"
           >
