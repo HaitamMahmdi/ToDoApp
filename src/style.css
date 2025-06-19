@@ -11,6 +11,15 @@
   --color-success: #22c55e;
   --color-warning: #f97316;
   --color-error: #ef4444;
+  --animate-slide-to-left: slideToLeft 2s ease-in-out forwards paused;
+  @keyframes slideToLeft {
+    0% {
+      left: 0%;
+    }
+    100% {
+      left: -100%;
+    }
+  }
 }
 * {
   outline: none;

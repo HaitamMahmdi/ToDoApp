@@ -11,10 +11,22 @@ import {
   faEnvelope,
   faEye,
   faCaretRight,
+  faCircleCheck,
+  faCircleExclamation,
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faPlus, faEnvelope, faEye, faCaretRight);
+library.add(
+  faPlus,
+  faEnvelope,
+  faEye,
+  faCaretRight,
+  faCircleCheck,
+  faCircleExclamation,
+  faEyeSlash
+);
 createApp(App)
   .use(router)
   .use(pinia)
