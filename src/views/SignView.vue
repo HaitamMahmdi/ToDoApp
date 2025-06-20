@@ -9,6 +9,8 @@ authStore.checkAuth();
 watch(user, (val) => {
   console.log("User updated:", val);
 });
+const inPhase = ref("2");
+
 const isLoginMode = ref(false);
 
 const emailInput = ref("");
@@ -83,6 +85,9 @@ const validitPassword = () => {
     passwordMessage.value.innerText = `Looks good!`;
   }
 };
+
+const firstPhase = ref(null);
+const secondPhase = ref(null);
 const handleSubmit = () => {
   if (isLoginMode.value) {
     if (isValidEmail.value && isVaildPW.value) {
@@ -99,6 +104,10 @@ const handleSubmit = () => {
       isVaildPW.value
     ) {
       authStore.signUp(emailInput.value, passwordInput.value);
+
+      firstPhase.value.style.animationPlayState = "running";
+      secondPhase.value.style.animationPlayState = "running";
+      inPhase.value = "2";
     } else {
       validitEmail();
       validitPassword();
@@ -106,6 +115,19 @@ const handleSubmit = () => {
       validitLN();
     }
   }
+};
+const changColor = (e) => {
+  const target = e.currentTarget;
+  const isClicked = target.dataset.clicked === "true";
+  console.log(isClicked);
+  if (!isClicked) {
+    target.classList.replace("bg-gray-300", `bg-surface`);
+    target.classList.replace("text-black", `text-white`);
+  } else {
+    target.classList.replace("bg-surface", `bg-gray-300`);
+    target.classList.replace("text-white", `text-black`);
+  }
+  target.dataset.clicked = (!isClicked).toString();
 };
 </script>
 
@@ -116,14 +138,18 @@ const handleSubmit = () => {
         @submit.prevent
         novalidate
         action=""
-        class="bg-on-primary h-[37.5rem] flex justify-between max-sm:w-full p-4 sm:w-fit md:min-w-xl flex-col"
+        class="bg-on-primary relative h-[37.5rem] overflow-hidden flex justify-between max-sm:w-full p-4 sm:w-fit md:min-w-xl flex-col"
       >
         <h1
           class="text-textColor text-center mb-10 max-sm:text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-bold"
         >
           {{ isLoginMode ? "signIn" : "signUp" }}
         </h1>
-        <div id="firstPhase">
+        <div
+          id="firstPhase"
+          ref="firstPhase"
+          class="relative animate-slide-from-right left-0"
+        >
           <div class="w-full sm:w-md relative mx-auto animate-slide-to-left">
             <div class="relative">
               <input
@@ -340,39 +366,89 @@ const handleSubmit = () => {
               >{{ isLoginMode ? "SignUp" : "SignIn" }}</span
             >
           </p>
-          <div
-            v-show="!isLoginMode"
-            class="w-md max-sm:w-full h-2/5 pt-20 mx-auto flex flex-col justify-between"
-          >
-            <button
-              @click="handleSubmit"
-              class="ml-auto flex items-center w-28 sm:w-full max-sm:w-full justify-center rounded-2xl bg-on-surface p-2 cursor-pointer"
+        </div>
+        <div
+          id="secondPhase"
+          ref="secondPhase"
+          class="relative top-[0%] animate-slide-to-left left-[110%] max-w-md bg-white"
+        >
+          <h2 class="font-semibold text-3xl mb-5">
+            How did you hear about us ?
+          </h2>
+          <div class="flex flex-wrap">
+            <p
+              @click="changColor"
+              data-clicked="false"
+              class="p-2 px-4 transition duration-75 text-black bg-gray-300 rounded-full m-2 cursor-pointer"
             >
-              <p class="text-2xl text-on-primary font-semibold">next</p>
               <font-awesome-icon
-                class="text-primary ml-1 text-2xl"
-                icon="caret-right"
+                icon="fa-brands fa-instagram"
+                class="text-[#E1306C]"
               />
-            </button>
-            <div class="flex items-center justify-center">
-              <div
-                class="flex justify-center items-center w-10 h-10 bg-primary text-on-primary rounded-full font-bold"
-              >
-                1
-              </div>
-              <div class="w-5 bg-on-surface h-0.5"></div>
-              <div
-                class="flex justify-center items-center w-10 h-10 bg-on-surface text-on-primary rounded-full font-bold"
-              >
-                2
-              </div>
-              <div class="w-5 bg-on-surface h-0.5"></div>
-              <div
-                class="flex justify-center items-center w-10 h-10 bg-on-surface text-on-primary rounded-full font-bold"
-              >
-                3
-              </div>
-            </div>
+              Instagram
+            </p>
+            <p
+              data-clicked="false"
+              @click="changColor"
+              class="p-2 px-4 text-black transition duration-75 bg-gray-300 rounded-full m-2 cursor-pointer"
+            >
+              <font-awesome-icon
+                icon="fa-brands fa-youtube"
+                class="text-[#FF0000]"
+              />
+              Youtube
+            </p>
+            <p
+              @click="changColor"
+              data-clicked="false"
+              class="p-2 px-4 text-black transition duration-75 bg-gray-300 rounded-full m-2 cursor-pointer"
+            >
+              <font-awesome-icon
+                icon="fa-brands fa-linkedin"
+                class="text-[#0A66C2]"
+              />
+              Linkedin
+            </p>
+            <p
+              @click="changColor"
+              data-clicked="false"
+              class="p-2 px-4 text-black transition duration-75 bg-gray-300 rounded-full m-2 cursor-pointer"
+            >
+              <font-awesome-icon
+                icon="fa-brands fa-x-twitter"
+                class="text-black"
+              />
+              Twitter
+            </p>
+            <p
+              @click="changColor"
+              data-clicked="false"
+              class="p-2 px-4 text-black transition duration-75 bg-gray-300 rounded-full m-2 cursor-pointer"
+            >
+              <font-awesome-icon
+                icon="fa-brands fa-telegram"
+                class="text-[#229ED9]"
+              />
+              Telegram
+            </p>
+            <p
+              @click="changColor"
+              data-clicked="false"
+              class="p-2 px-4 text-black transition duration-75 bg-gray-300 rounded-full m-2 cursor-pointer"
+            >
+              <font-awesome-icon
+                class="text-[#FF4500]"
+                icon="fa-brands fa-reddit-alien"
+              />
+              Reddit
+            </p>
+            <p
+              @click="changColor"
+              data-clicked="false"
+              class="p-2 px-6 transition duration-75 text-black bg-gray-300 rounded-full m-2 cursor-pointer"
+            >
+              Other
+            </p>
           </div>
         </div>
         <button
@@ -383,6 +459,43 @@ const handleSubmit = () => {
         >
           Submit
         </button>
+        <div
+          v-show="!isLoginMode"
+          class="w-md max-sm:w-full h-2/5 pt-20 mx-auto flex flex-col justify-between"
+        >
+          <button
+            @click="handleSubmit"
+            class="ml-auto flex items-center w-28 sm:w-full max-sm:w-full justify-center rounded-2xl bg-on-surface p-2 cursor-pointer"
+          >
+            <p class="text-2xl text-on-primary font-semibold">next</p>
+            <font-awesome-icon
+              class="text-primary ml-1 text-2xl"
+              icon="caret-right"
+            />
+          </button>
+          <div class="flex items-center justify-center">
+            <div
+              :class="[inPhase === '1' ? 'bg-primary' : 'bg-on-surface']"
+              class="flex justify-center transition duration-75 items-center w-10 h-10 text-on-primary rounded-full font-bold"
+            >
+              1
+            </div>
+            <div class="w-5 bg-on-surface h-0.5"></div>
+            <div
+              :class="[inPhase === '2' ? 'bg-primary' : 'bg-on-surface']"
+              class="flex justify-center transition duration-75 items-center w-10 h-10 text-on-primary rounded-full font-bold"
+            >
+              2
+            </div>
+            <div class="w-5 bg-on-surface h-0.5"></div>
+            <div
+              :class="[inPhase === '3' ? 'bg-primary' : 'bg-on-surface']"
+              class="flex justify-center transition duration-75 items-center w-10 h-10 text-on-primary rounded-full font-bold"
+            >
+              3
+            </div>
+          </div>
+        </div>
       </form>
       <div
         class="w-md max-sm:hidden sm:hidden lg:block h-[40rem] bg-on-surface p-4 pt-10"

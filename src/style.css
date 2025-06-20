@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @theme {
-  ---color-surface: #222831;
+  --color-surface: #222831;
   --color-on-surface: #1e1e1e;
   --color-primary: #00adb5;
   --color-on-primary: #ffffff;
@@ -11,13 +11,23 @@
   --color-success: #22c55e;
   --color-warning: #f97316;
   --color-error: #ef4444;
-  --animate-slide-to-left: slideToLeft 2s ease-in-out forwards paused;
-  @keyframes slideToLeft {
+  --animate-slide-from-right: slideFromRight 0.5s ease-in-out forwards;
+  --animate-slide-to-left: slideToLeft 0.5s ease-in-out 0.6s forwards;
+  @keyframes slideFromRight {
     0% {
       left: 0%;
     }
     100% {
+      display: none;
       left: -100%;
+    }
+  }
+  @keyframes slideToLeft {
+    0% {
+      left: 110%;
+    }
+    100% {
+      left: 0%;
     }
   }
 }
@@ -28,6 +38,6 @@
 body {
   height: 100vh;
   margin: 0;
-  background-color: var(---color-surface);
+  background-color: var(--color-surface);
   font-family: "Roboto", sans-serif;
 }

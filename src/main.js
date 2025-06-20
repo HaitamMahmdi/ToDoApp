@@ -15,7 +15,16 @@ import {
   faCircleExclamation,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
-
+import {
+  faInstagram,
+  faYoutube,
+  faTiktok,
+  faLinkedin,
+  faXTwitter,
+  faGoogle,
+  faTelegram,
+  faRedditAlien,
+} from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 library.add(
@@ -25,7 +34,15 @@ library.add(
   faCaretRight,
   faCircleCheck,
   faCircleExclamation,
-  faEyeSlash
+  faEyeSlash,
+  faInstagram,
+  faYoutube,
+  faTiktok,
+  faLinkedin,
+  faXTwitter,
+  faGoogle,
+  faTelegram,
+  faRedditAlien
 );
 createApp(App)
   .use(router)
