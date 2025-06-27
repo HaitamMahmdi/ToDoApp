@@ -1,59 +1,36 @@
-<template>
-  Home page
-  <header class="flex items-center flex-col p-4">
-    <h1 class="text-[clamp(2rem,10vw,4rem)] font-bold mb-10 text-textColor">
-      ToDo App
-    </h1>
-    <button
-      @click="addTask = !addTask"
-      title="Add New Task"
-      aria-label="add a new task"
-      class="font-bold flex justify-center items-center cursor-pointer h-[3rem] w-[3rem] border rounded-full border-textColor text-textColor text-2xl"
-    >
-      <font-awesome-icon icon="plus" />
-    </button>
-    <form
-      @submit.prevent
-      v-show="addTask"
-      class="text-textColor mt-10 flex flex-col min-w-[25rem]"
-      action=""
-    >
-      <div class="flex items-center justify-between">
-        <label class="text-2xl mr-2" for="Title">Title :</label>
-        <input
-          required
-          class="bg-white rounded p-2 text-black"
-          type="text"
-          name="Title"
-          id="Title"
-        />
-      </div>
-      <div class="flex items-center justify-between my-4">
-        <label class="text-2xl mr-2" for="description">description :</label>
-        <input
-          required
-          class="bg-white rounded p-2 text-black"
-          type="text"
-          name="description"
-          id="description"
-        />
-      </div>
+<script setup>
+/**
+ *TODO => Add more sections to the page e.g (aboutUs, subscribe plane,footr,users feedback)
+ *TODO => give every new section an entry animation
+ *TODO => give the hero section a fitting bg for the light theme
+ */
+import { useRouter } from "vue-router";
+const router = useRouter();
+</script>
 
-      <div class="flex items-center justify-between">
-        <label class="text-2xl" for="type">Choose a type :</label>
-        <select id="type" name="type">
-          <option value="Sport">Sport</option>
-          <option value="Mental">Mental</option>
-          <option value="Creative">Creative</option>
-          <option value="Social">Social</option>
-          <option value="Entertainment">Entertainment</option>
-        </select>
+<template>
+  <div
+    class="text-4xl relative bg-cover bg-no-repeat w-full h-[calc(100vh-67px)] bg-right bg-[#050b10] md:bg-[url(assets/landing2.png)]"
+  >
+    <div
+      class="text-white md:text-left text-center p-1 sm:pl-4 container mx-auto relative top-3/6 md:top-2/5 transform -translate-y-3/6"
+    >
+      <h2 class="font-bold text-[clamp(1.5rem,5vw,3rem)] mb-10">
+        Simple . Powerful . Friendly
+      </h2>
+      <div class="mx-auto sm:ml-5">
+        <ul class="mb-10 text-[clamp(1.4rem,5vw,1.8rem)]">
+          <li>Capture tasks at the speed of thought</li>
+          <li class="my-4">Stay organized and focused</li>
+          <li>Simplify your planning</li>
+        </ul>
+        <button
+          @click="router.push(`/SignView`)"
+          class="bg-primary px-4 text-2xl font-semibold py-2 rounded-2xl cursor-pointer"
+        >
+          Start Now
+        </button>
       </div>
-      <input
-        class="bg-accent w-[50%] p-4 rounded-2xl mx-auto mt-10"
-        type="submit"
-        value="Add Task"
-      />
-    </form>
-  </header>
+    </div>
+  </div>
 </template>

@@ -1,18 +1,27 @@
+/**
+ *? => Maybe add more colors to the white theme ?
+ *TODO => Add more animations 
+*/
+
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 @theme {
+  /* main colors*/
+  --color-primary: #00c6d7;
+  /* Dark theme colors*/
   --color-surface: #222831;
   --color-on-surface: #1e1e1e;
-  --color-primary: #00adb5;
   --color-on-primary: #ffffff;
   --color-secondary: #393e46;
   --color-on-secondary: #eeeeee;
+  /* light theme colors*/
 
   /* Semantic Colors */
   --color-success: #22c55e;
   --color-warning: #f97316;
   --color-error: #ef4444;
-  --animate-slide-from-right: slideFromRight 0.5s ease-in-out forwards;
-  --animate-slide-to-left: slideToLeft 0.5s ease-in-out 0.6s forwards;
+  --animate-slide-from-right: slideFromRight 0.5s ease-in-out forwards paused;
+  --animate-slide-to-left: slideToLeft 0.5s ease-in-out 0.6s forwards paused;
   @keyframes slideFromRight {
     0% {
       left: 0%;
@@ -28,6 +37,7 @@
     }
     100% {
       left: 0%;
+      position: relative;
     }
   }
 }
@@ -40,4 +50,7 @@ body {
   margin: 0;
   background-color: var(--color-surface);
   font-family: "Roboto", sans-serif;
+}
+html.light body {
+  background-color: white;
 }

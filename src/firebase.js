@@ -10,9 +10,9 @@ const firebaseConfig = {
   projectId: "todoapp-415e7",
   storageBucket: "todoapp-415e7.firebasestorage.app",
   messagingSenderId: "911891889886",
-  appId: "1:911891889886:web:55282e40770addb3f80c4f"
+  appId: "1:911891889886:web:55282e40770addb3f80c4f",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export default app
+export default app;

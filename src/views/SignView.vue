@@ -1,8 +1,12 @@
 <script setup>
+/** 
+ * TODO: Make the page  
+
+
+*/
 import { computed, ref, watch } from "vue";
 import { useAuthStore } from "../stors/AuthStore";
 const authStore = useAuthStore();
-const addTask = ref(false);
 const user = computed(() => authStore.user);
 const showPassword = ref(false);
 authStore.checkAuth();
@@ -132,13 +136,13 @@ const changColor = (e) => {
 </script>
 
 <template>
-  <div class="container max-sm:w-full mx-auto mt-20">
+  <div class="container max-sm:w-full mx-auto mt-5">
     <div class="w-fit mx-auto flex justify-center">
       <form
         @submit.prevent
         novalidate
         action=""
-        class="bg-on-primary relative h-[37.5rem] overflow-hidden flex justify-between max-sm:w-full p-4 sm:w-fit md:min-w-xl flex-col"
+        class="bg-on-primary dark:text-white dark:bg-surface relative overflow-hidden flex justify-between max-sm:w-full p-4 sm:w-fit md:min-w-xl flex-col"
       >
         <h1
           class="text-textColor text-center mb-10 max-sm:text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-bold"
@@ -157,10 +161,10 @@ const changColor = (e) => {
                 v-model="emailInput"
                 autocomplete="email"
                 required
-                class="border max-sm:w-full w-md pl-10 h-12 placeholder:font-bold"
+                class="peer border max-sm:w-full dark:focus:bg-on-primary dark:focus:text-surface w-md pl-10 h-12 placeholder:font-bold"
                 :class="[
                   isValidEmail === null
-                    ? 'border-on-surface placeholder:text-on-surface'
+                    ? 'border-on-surface dark:border-on-primary placeholder:text-on-surface dark:placeholder:text-on-primary'
                     : isValidEmail
                     ? 'border-success'
                     : 'border-error text-error placeholder:text-error',
@@ -172,10 +176,10 @@ const changColor = (e) => {
               <font-awesome-icon
                 :class="[
                   isValidEmail === null
-                    ? 'text-on-surface'
+                    ? 'text-on-primary peer-focus:text-on-surface   '
                     : isValidEmail
-                    ? 'text-success'
-                    : 'text-error',
+                    ? 'text-success '
+                    : 'text-error ',
                 ]"
                 class="absolute text-2xl left-2 top-3/6 transform -translate-y-2/4"
                 icon="envelope"
@@ -215,10 +219,10 @@ const changColor = (e) => {
                 v-model="firstNameInput"
                 type="text"
                 placeholder="First Name"
-                class="placeholder:font-bold block border pl-10 h-12 w-full"
+                class="placeholder:font-bold dark:focus:bg-on-primary dark:focus:text-surface block border pl-10 h-12 w-full"
                 :class="[
                   isValidFN === null
-                    ? 'border-on-surface placeholder:text-on-surface'
+                    ? 'border-on-surface dark:border-on-primary placeholder:text-on-surface dark:placeholder:text-on-primary'
                     : isValidFN
                     ? 'border-success'
                     : 'border-error text-error placeholder:text-error',
@@ -253,10 +257,10 @@ const changColor = (e) => {
                 @input="validitLN"
                 type="text"
                 placeholder="Last Name"
-                class="placeholder:font-bold block border pl-10 h-12 w-full"
+                class="placeholder:font-bold block border pl-10 h-12 w-full dark:focus:bg-on-primary dark:focus:text-surface"
                 :class="[
                   isValidLN === null
-                    ? 'border-on-surface placeholder:text-on-surface'
+                    ? 'border-on-surface dark:border-on-primary placeholder:text-on-surface dark:placeholder:text-on-primary'
                     : isValidLN
                     ? 'border-success'
                     : 'border-error text-error placeholder:text-error',
@@ -295,10 +299,10 @@ const changColor = (e) => {
                 minlength="8"
                 maxlength="16"
                 placeholder="Password"
-                class="placeholder:font-bold block border pl-10 h-12 w-md max-sm:w-full"
+                class="peer placeholder:font-bold block border pl-10 h-12 w-md max-sm:w-full dark:focus:bg-on-primary dark:focus:text-surface"
                 :class="[
                   isVaildPW === null
-                    ? 'border-on-surface placeholder:text-on-surface'
+                    ? 'border-on-surface dark:border-on-primary placeholder:text-on-surface dark:placeholder:text-on-primary '
                     : isVaildPW
                     ? 'border-success'
                     : 'border-error text-error placeholder:text-error',
@@ -310,7 +314,7 @@ const changColor = (e) => {
                 @click="showPassword = !showPassword"
                 :class="[
                   isVaildPW === null
-                    ? 'text-on-surface'
+                    ? 'text-on-primary peer-focus:text-on-surface'
                     : isVaildPW
                     ? 'text-success'
                     : 'text-error',
@@ -322,7 +326,7 @@ const changColor = (e) => {
                 icon="eye-slash"
                 :class="[
                   isVaildPW === null
-                    ? 'text-on-surface'
+                    ? 'text-on-primary peer-focus:text-on-surface'
                     : isVaildPW
                     ? 'text-success'
                     : 'text-error',
@@ -370,7 +374,7 @@ const changColor = (e) => {
         <div
           id="secondPhase"
           ref="secondPhase"
-          class="relative top-[0%] animate-slide-to-left left-[110%] max-w-md bg-white"
+          class="absolute top-[0%] animate-slide-to-left left-[110%] max-w-md bg-white"
         >
           <h2 class="font-semibold text-3xl mb-5">
             How did you hear about us ?
@@ -461,11 +465,11 @@ const changColor = (e) => {
         </button>
         <div
           v-show="!isLoginMode"
-          class="w-md max-sm:w-full h-2/5 pt-20 mx-auto flex flex-col justify-between"
+          class="w-md max-sm:w-full h-2/5 pt-5 mx-auto flex flex-col justify-between"
         >
           <button
             @click="handleSubmit"
-            class="ml-auto flex items-center w-28 sm:w-full max-sm:w-full justify-center rounded-2xl bg-on-surface p-2 cursor-pointer"
+            class="ml-auto flex mb-5 items-center w-28 sm:w-full max-sm:w-full justify-center rounded-2xl bg-on-surface p-2 cursor-pointer"
           >
             <p class="text-2xl text-on-primary font-semibold">next</p>
             <font-awesome-icon
@@ -497,13 +501,6 @@ const changColor = (e) => {
           </div>
         </div>
       </form>
-      <div
-        class="w-md max-sm:hidden sm:hidden lg:block h-[40rem] bg-on-surface p-4 pt-10"
-      >
-        <h2 class="text-on-primary font-bold text-3xl text-center">
-          Simple . Powerful . Friendly
-        </h2>
-      </div>
     </div>
   </div>
 </template>
