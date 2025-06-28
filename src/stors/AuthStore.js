@@ -11,6 +11,7 @@ const auth = getAuth(app);
 export const useAuthStore = defineStore("authStore", {
   state: () => ({
     user: null,
+    userProfileImage: null,
   }),
   actions: {
     checkAuth() {
@@ -25,14 +26,18 @@ export const useAuthStore = defineStore("authStore", {
       });
     },
 
-    async signUp(email, password) {
+    async signUp(email, password, userName, userProfileImagePath) {
       try {
         const userCred = await createUserWithEmailAndPassword(
           auth,
           email,
           password
         );
+        userCred.user.displayName = userName;
         this.user = userCred.user;
+        this.userProfileImage = userProfileImagePath;
+        console.log(this.user);
+        console.log(this.userProfileImage);
       } catch (err) {
         console.error("Sign-up error:", err.code, err.message);
       }
