@@ -1,6 +1,5 @@
 <script setup>
 /**
- * TODO: Make the transtion between phases more UI friendly
  * TODO:Subscribe to Firebase Storage so users can upload their profile images.
  * ! FIX: Error whene user try create profile with existing Email
  * TODO: Make all the validation functions into one function or component

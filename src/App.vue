@@ -42,7 +42,7 @@ console.log(themeStore.theme);
       </div>
     </div>
   </header>
-  <main class="h-[calc(100vh-67px)]">
+  <main class="">
     <router-view />
   </main>
   <FooterCom></FooterCom>

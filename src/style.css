@@ -23,6 +23,7 @@ paused
   --color-error: #ef4444;
   --animate-slide-from-right: slideFromRight 0.5s ease-in-out forwards;
   --animate-slide-to-left: slideToLeft 0.5s ease-in-out 0.6s forwards;
+  --animate-scroll: scrolls 40s linear infinite;
   @keyframes slideFromRight {
     0% {
       left: 0%;
@@ -41,16 +42,25 @@ paused
       position: relative;
     }
   }
+  @keyframes scrolls {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-256px * 10));
+    }
+  }
 }
 * {
   outline: none;
   list-style: none;
+  box-sizing: border-box;
 }
 body {
-  height: 100vh;
   margin: 0;
   background-color: var(--color-surface);
   font-family: "Roboto", sans-serif;
+  overflow-x: hidden;
 }
 html.light body {
   background-color: white;

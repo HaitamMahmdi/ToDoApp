@@ -5,12 +5,14 @@
  *TODO => give the hero section a fitting bg for the light theme
  */
 import { useRouter } from "vue-router";
+import SliderCom from "../components/SliderCom.vue";
 const router = useRouter();
 </script>
 
 <template>
-  <div
-    class="text-4xl h-full relative bg-cover bg-no-repeat w-full bg-right bg-[#050b10] md:bg-[url(assets/landing2.png)]"
+  <section
+    id="hero"
+    class="text-4xl h-[calc(100vh-67px)] relative bg-cover bg-no-repeat w-full bg-right bg-[#050b10] md:bg-[url(assets/landing2.png)]"
   >
     <div
       class="text-white md:text-left text-center p-1 sm:pl-4 container mx-auto relative top-3/6 md:top-2/5 transform -translate-y-3/6"
@@ -32,5 +34,11 @@ const router = useRouter();
         </button>
       </div>
     </div>
-  </div>
+  </section>
+  <section
+    id="slider"
+    class="flex overflow-x-hidden animate- w-[calc(256px*20)]"
+  >
+    <SliderCom></SliderCom>
+  </section>
 </template>
