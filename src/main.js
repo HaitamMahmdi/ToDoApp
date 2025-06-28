@@ -15,6 +15,7 @@ import {
   faCircleExclamation,
   faEyeSlash,
   faMoon,
+  faHeart,
   faSun,
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -39,6 +40,7 @@ library.add(
   faEyeSlash,
   faMoon,
   faSun,
+  faHeart,
   faInstagram,
   faYoutube,
   faTiktok,

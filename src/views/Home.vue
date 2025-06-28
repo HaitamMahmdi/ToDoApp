@@ -10,7 +10,7 @@ const router = useRouter();
 
 <template>
   <div
-    class="text-4xl relative bg-cover bg-no-repeat w-full h-[calc(100vh-67px)] bg-right bg-[#050b10] md:bg-[url(assets/landing2.png)]"
+    class="text-4xl h-full relative bg-cover bg-no-repeat w-full bg-right bg-[#050b10] md:bg-[url(assets/landing2.png)]"
   >
     <div
       class="text-white md:text-left text-center p-1 sm:pl-4 container mx-auto relative top-3/6 md:top-2/5 transform -translate-y-3/6"

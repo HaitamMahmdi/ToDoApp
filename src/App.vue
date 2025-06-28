@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, useRoute } from "vue-router";
 import { useThemeStore } from "./stors/ThemeStore";
+import FooterCom from "./components/FooterCom.vue";
 const themeStore = useThemeStore();
 const route = useRoute();
 console.log(themeStore.theme);
@@ -13,7 +14,9 @@ console.log(themeStore.theme);
   >
     <div class="container mx-auto flex justify-between items-center">
       <div class="logo">
-        <img src="./assets/Component 1.png" width="35px" alt="" />
+        <RouterLink to="/"
+          ><img src="./assets/Component 1.png" width="35px" alt=""
+        /></RouterLink>
       </div>
       <div class="flex items-center">
         <ul v-if="route.name !== 'SignIn'" class="flex font-semibold">
@@ -39,5 +42,8 @@ console.log(themeStore.theme);
       </div>
     </div>
   </header>
-  <router-view />
+  <main class="h-[calc(100vh-67px)]">
+    <router-view />
+  </main>
+  <FooterCom></FooterCom>
 </template>
