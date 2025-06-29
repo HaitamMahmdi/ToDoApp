@@ -7,7 +7,10 @@ import router from "./router";
 const pinia = createPinia();
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
+  faPenToSquare,
+  faUser,
   faArrowRightFromBracket,
+  faAngleDown,
   faAngleLeft,
   faAngleRight,
   faGear,
@@ -39,6 +42,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 library.add(
+  faPenToSquare,
+  faUser,
+  faAngleDown,
   faAngleLeft,
   faAngleRight,
   faArrowRightFromBracket,

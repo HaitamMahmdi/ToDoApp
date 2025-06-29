@@ -5,7 +5,7 @@
       <ul>
         <li>
           <img src="../assets/Component 1.png" width="64px" alt="" />
-          <p class="text-on-primary w-md my-5 text-[18px]">
+          <p class="text-on-primary md:w-md my-5 text-[18px]">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius,
             dolorem quod nesciunt sapiente perferendis a nulla minima
             repudiandae, placeat,
