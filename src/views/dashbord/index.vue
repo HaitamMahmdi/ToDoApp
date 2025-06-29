@@ -21,7 +21,7 @@ const asideToggler = () => {
   <section class="flex">
     <button
       @click="asideToggler"
-      class="md:hidden absolute top-0 left-0 cursor-pointer z-10 p-5 bg-on-primary w-9 h-9 flex items-center justify-center"
+      class="z-10 absolute top-0 left-0 cursor-pointer p-5 bg-on-primary w-9 h-9 flex items-center justify-center"
     >
       <font-awesome-icon v-if="isAsideOpen" icon="angle-left" />
       <font-awesome-icon v-else icon="angle-right" />
@@ -29,7 +29,7 @@ const asideToggler = () => {
     <section
       v-show="isAsideOpen"
       id="aside"
-      class="w-3xs max-[779px]:absolute min-[780px]:relative left-0 top-0 md:block! dark:bg-on-surface text-on-primary h-[100vh]"
+      class="w-3xs absolute left-0 top-0 dark:bg-on-surface text-on-primary h-[100vh]"
     >
       <div class="flex flex-col mb-5 pt-5 items-center">
         <div id="userImageAndName" class="">

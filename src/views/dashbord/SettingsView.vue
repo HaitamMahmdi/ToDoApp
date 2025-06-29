@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * TODO: Make the page actually update user data and informations and theme
+ * TODO: Make the page responsive to bigger screens
+ * TODO: add danger zone for delete user
+ * TODO: add update password
+ */
 import { useAuthStore } from "../../stors/AuthStore";
 import { useThemeStore } from "../../stors/ThemeStore";
 import InputCom from "../../components/InputCom.vue";
@@ -9,11 +15,17 @@ const user = computed(() => authStore.user);
 const themeStore = useThemeStore();
 const profileImage = useAuthStore().userProfileImage;
 const showlist = ref(false);
+const emailReadonly = ref(true);
+const displayNameReadonly = ref(true);
+
+const emailNewVal = ref("");
+const displayNameNewVal = ref("");
 const gender = ref("Man");
 const yourGender = (e) => {
   const target = e.target;
   gender.value = target.innerText;
 };
+//v-if="displayNameNewVal && emailNewVal"
 </script>
 <template>
   <section class="py-10 grow container px-4 mx-auto">
@@ -84,24 +96,72 @@ const yourGender = (e) => {
               <span class="ml-5">Account settings</span>
             </p>
             <ul v-if="user">
-              <li class="flex justify-between items-center">
-                <p class="p-5">{{ user.displayName }}</p>
-                <button class="cursor-pointer">
+              <li class="flex justify-between mb-2 mt-2 items-center">
+                <input
+                  :readonly="!displayNameReadonly"
+                  v-model="displayNameNewVal"
+                  class="p-5 w-4/5 h-14"
+                  :class="[
+                    displayNameReadonly ? 'bg-on-surface' : 'bg-surface',
+                  ]"
+                  type="text"
+                  :value="user.displayName"
+                />
+
+                <button
+                  @click="displayNameReadonly = !displayNameReadonly"
+                  class="cursor-pointer"
+                >
                   <font-awesome-icon icon="pen-to-square" />
                 </button>
               </li>
               <li class="flex justify-between items-center">
-                <p class="p-5">{{ user.email }}</p>
-                <button class="cursor-pointer">
+                <input
+                  :readonly="!emailReadonly"
+                  class="p-5 w-4/5 h-14"
+                  v-model="emailNewVal"
+                  :class="[emailReadonly ? 'bg-on-surface' : 'bg-surface']"
+                  type="text w-[80%]"
+                  :value="user.email"
+                />
+                <button
+                  @click="emailReadonly = !emailReadonly"
+                  class="cursor-pointer"
+                >
                   <font-awesome-icon icon="pen-to-square" />
                 </button>
               </li>
-              <li class="flex justify-between items-center">
+              <li class="flex mt-5 justify-between items-center">
                 <p class="p-5">Add a Phone Number</p>
                 <input
                   class="bg-secondary py-2 px-3 md:w-[60%]"
                   type="number"
                 />
+              </li>
+              <li>
+                <button class="bg-primary mt-5 px-4 py-3 rounded-2xl">
+                  Submit changes
+                </button>
+              </li>
+              <li class="relative border h-32 p-4 mt-20 border-error">
+                <h3
+                  class="text-3xl top-[-20%] dark:bg-surface px-4 absolute font-semibold text-error"
+                >
+                  Danger zone
+                </h3>
+
+                <p class="flex justify-between items-center">
+                  <span class="text-tiny">Delete my account</span>
+                  <button class="bg-error px-3 w-28 py-1 rounded-2xl">
+                    Delete
+                  </button>
+                </p>
+                <p class="flex mt-5 justify-between items-center">
+                  <span class="text-tiny">Delete all tasks</span>
+                  <button class="bg-error px-3 w-28 py-1 rounded-2xl">
+                    Delete
+                  </button>
+                </p>
               </li>
             </ul>
           </li>
