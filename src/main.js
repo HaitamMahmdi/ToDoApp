@@ -7,8 +7,15 @@ import router from "./router";
 const pinia = createPinia();
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
+  faArrowRightFromBracket,
+  faAngleLeft,
+  faAngleRight,
+  faGear,
+  faFolderOpen,
+  faCalendarDays,
   faPlus,
   faEnvelope,
+  faList,
   faEye,
   faCaretRight,
   faCircleCheck,
@@ -17,6 +24,7 @@ import {
   faMoon,
   faHeart,
   faSun,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faInstagram,
@@ -31,7 +39,15 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 library.add(
+  faAngleLeft,
+  faAngleRight,
+  faArrowRightFromBracket,
+  faGear,
+  faFolderOpen,
+  faCalendarDays,
   faPlus,
+  faList,
+  faCheck,
   faEnvelope,
   faEye,
   faCaretRight,

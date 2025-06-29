@@ -29,10 +29,11 @@ const feedbacks = [
 </script>
 <template>
   <div
-    class="bg-surface relative p-4 text-on-primary animate-scroll border-1 border-on-surface text-center min-w-64 h-60 flex flex-col items-center justify-center"
+    class="relative p-4 text-on-primary animate-scroll text-center min-w-64 h-60 flex flex-col items-center justify-center"
     v-for="(feedback, index) in feedbacks"
     :key="index"
     id="card"
+    :class="Number.isInteger(index / 2) ? 'bg-surface' : 'bg-on-surface'"
   >
     <p class="mb-5">{{ feedback.reaction }}</p>
     <h4 class="font-bold text-4xl">{{ feedback.company }}</h4>

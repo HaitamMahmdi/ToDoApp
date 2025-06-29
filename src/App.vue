@@ -1,14 +1,19 @@
 <script setup>
+import { computed } from "vue";
+import { useAuthStore } from "./stors/AuthStore";
+const authStore = useAuthStore();
+const user = computed(() => authStore.user);
 import { RouterLink, useRoute } from "vue-router";
 import { useThemeStore } from "./stors/ThemeStore";
 import FooterCom from "./components/FooterCom.vue";
+
 const themeStore = useThemeStore();
 const route = useRoute();
-console.log(themeStore.theme);
 </script>
 
 <template>
   <header
+    v-if="!user"
     :class="[themeStore.theme === 'light' ? 'bg-secondary' : 'bg-on-surface']"
     class="w-full p-4"
   >
@@ -42,7 +47,7 @@ console.log(themeStore.theme);
       </div>
     </div>
   </header>
-  <main class="">
+  <main class="overflow-x-hidden relative min-h-[100vh]">
     <router-view />
   </main>
   <FooterCom></FooterCom>

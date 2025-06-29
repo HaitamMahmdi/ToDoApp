@@ -13,6 +13,11 @@ const routes = [
     path: "/SignView",
     component: SignView,
   },
+  {
+    name: "dashboard",
+    path: "/dashboard",
+    component: () => import("../views/dashboardView.vue"),
+  },
 ];
 
 const router = createRouter({

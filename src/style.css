@@ -7,6 +7,7 @@ paused
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 @theme {
+  --text-tiny: 1.2rem;
   /* main colors*/
   --color-primary: #00c6d7;
   /* Dark theme colors*/

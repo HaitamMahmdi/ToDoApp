@@ -6,14 +6,15 @@
  */
 import { computed, ref, watch } from "vue";
 import { useAuthStore } from "../stors/AuthStore";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
 const showPassword = ref(false);
 authStore.checkAuth();
-watch(user, (val) => {
-  console.log("User updated:", val);
-});
-const inPhase = ref(3);
+const isFinished = ref(false);
+
+const inPhase = ref(1);
 const isLoginMode = ref(false);
 const firstPhase = ref(null);
 const secondPhase = ref(null);
@@ -152,7 +153,7 @@ const handleSubmit = () => {
           userDisplayName.value,
           userImage.value.src
         );
-        inPhase.value = 0;
+        inPhase.value = 1;
       }
       inPhase.value += 1;
     } else {
@@ -163,10 +164,30 @@ const handleSubmit = () => {
     }
   }
 };
+watch(user, () => {
+  isFinished.value = true;
+  setTimeout(() => {
+    router.push("/dashboard");
+  }, 200);
+});
 </script>
 
 <template>
   <div class="container max-sm:w-full mx-auto mt-5">
+    <div
+      :class="isFinished ? ' opacity-100 z-1' : 'opacity-0 z-0'"
+      class="absolute h-[100vh] transition duration-200 w-full flex flex-col items-center justify-center top-0 left-0 dark:bg-on-surface dark:text-on-primary bg-on-primary"
+    >
+      <h1 class="text-[clamp(3rem,5vw,8rem)] font-semibold">All Finished</h1>
+      <div
+        class="bg-success w-24 h-24 p-5 text-on-primary rounded-full text-center flex items-center justify-center"
+      >
+        <font-awesome-icon
+          class="text-[clamp(3rem,5vw,8rem)]"
+          :icon="['fas', 'check']"
+        />
+      </div>
+    </div>
     <div class="w-fit mx-auto flex justify-center">
       <form
         @submit.prevent

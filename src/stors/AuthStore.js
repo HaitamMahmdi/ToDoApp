@@ -4,7 +4,9 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "@firebase/auth";
+import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
 import app from "../firebase";
 const auth = getAuth(app);
 
@@ -33,11 +35,19 @@ export const useAuthStore = defineStore("authStore", {
           email,
           password
         );
-        userCred.user.displayName = userName;
+        const db = getFirestore();
+        const colname = "users";
+        const docRef = doc(db, colname, `user-${userCred.user.uid}`);
+        await setDoc(docRef, {
+          tasks: [],
+          theme: "light",
+        });
+
         this.user = userCred.user;
+        updateProfile(this.user, {
+          displayName: `${userName}`,
+        });
         this.userProfileImage = userProfileImagePath;
-        console.log(this.user);
-        console.log(this.userProfileImage);
       } catch (err) {
         console.error("Sign-up error:", err.code, err.message);
       }
