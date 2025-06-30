@@ -5,6 +5,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  deleteUser,
+  updateEmail,
+  updatePassword,
 } from "@firebase/auth";
 import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
 import app from "../firebase";
@@ -13,7 +16,6 @@ const auth = getAuth(app);
 export const useAuthStore = defineStore("authStore", {
   state: () => ({
     user: null,
-    userProfileImage: null,
   }),
   actions: {
     checkAuth() {
@@ -46,8 +48,8 @@ export const useAuthStore = defineStore("authStore", {
         this.user = userCred.user;
         updateProfile(this.user, {
           displayName: `${userName}`,
+          photoURL: userProfileImagePath,
         });
-        this.userProfileImage = userProfileImagePath;
       } catch (err) {
         console.error("Sign-up error:", err.code, err.message);
       }
@@ -63,6 +65,56 @@ export const useAuthStore = defineStore("authStore", {
         this.user = userCred.user;
       } catch (err) {
         console.error("Sign-in error:", err.code, err.message);
+      }
+    },
+    async deleteAccount(user) {
+      try {
+        if (user) {
+          await deleteUser(user);
+        }
+      } catch (err) {
+        console.error("delete error:", err.code, err.message);
+      }
+    },
+    async updateUserImage(user, newPath) {
+      try {
+        if (user) {
+          await updateProfile(user, {
+            photoURL: newPath,
+          });
+        }
+      } catch (err) {
+        console.error("update User Image error:", err.code, err.message);
+      }
+    },
+    async updateDisplayName(user, newDisplayName) {
+      try {
+        if (user) {
+          await updateProfile(user, {
+            displayName: newDisplayName,
+          });
+        }
+      } catch (err) {
+        console.error("update Display Name error:", err.code, err.message);
+      }
+    },
+    async updateUserEmail(user, newEmail) {
+      try {
+        if (user) {
+          await updateEmail(user, newEmail);
+        }
+      } catch (err) {
+        console.error("update Email  error:", err.code, err.message);
+      }
+    },
+
+    async updateUserPassword(user, newPassword) {
+      try {
+        if (user) {
+          await updatePassword(user, newPassword);
+        }
+      } catch (err) {
+        console.error("update Password  error:", err.code, err.message);
       }
     },
   },

@@ -10,7 +10,7 @@ import { useAuthStore } from "../../stors/AuthStore";
 import { RouterLink, RouterView } from "vue-router";
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
-const userImage = computed(() => authStore.userProfileImage);
+//const userImage = computed(() => user.value.photoURL);
 authStore.checkAuth();
 const isAsideOpen = ref(true);
 const asideToggler = () => {
@@ -21,7 +21,7 @@ const asideToggler = () => {
   <section class="flex">
     <button
       @click="asideToggler"
-      class="z-10 absolute top-0 left-0 cursor-pointer p-5 bg-on-primary w-9 h-9 flex items-center justify-center"
+      class="z-60 absolute top-0 left-0 cursor-pointer p-5 bg-on-primary w-9 h-9 flex items-center justify-center"
     >
       <font-awesome-icon v-if="isAsideOpen" icon="angle-left" />
       <font-awesome-icon v-else icon="angle-right" />
@@ -29,13 +29,17 @@ const asideToggler = () => {
     <section
       v-show="isAsideOpen"
       id="aside"
-      class="w-3xs absolute left-0 top-0 dark:bg-on-surface text-on-primary h-[100vh]"
+      class="w-3xs absolute left-0 z-50 top-0 dark:bg-on-surface text-on-primary h-[100vh]"
     >
       <div class="flex flex-col mb-5 pt-5 items-center">
         <div id="userImageAndName" class="">
           <img
             class="w-20 h-20 rounded-full"
-            :src="userImage || `/public/user_default_profile_image/defualt.jpg`"
+            :src="
+              user
+                ? `/public/user_default_profile_image/${user.photoURL}.jpg `
+                : '/public/user_default_profile_image/defualt.jpg'
+            "
             alt=""
           />
         </div>

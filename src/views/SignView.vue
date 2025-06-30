@@ -124,10 +124,13 @@ const validitDisplayName = ()=>{
 }
 */
 const userImage = ref(null);
+const imageName = ref("");
 const changProfileImage = (e) => {
   const target = e.target;
   if (userImage.value) {
-    userImage.value.src = `/user_default_profile_image/${target.dataset.imagename}.jpg`;
+    console.log(imageName.value);
+    imageName.value = target.dataset.imagename;
+    userImage.value.src = `/user_default_profile_image/${imageName.value}.jpg`;
   }
 };
 
@@ -151,7 +154,7 @@ const handleSubmit = () => {
           emailInput.value,
           passwordInput.value,
           userDisplayName.value,
-          userImage.value.src
+          imageName.value
         );
         inPhase.value = 1;
       }
