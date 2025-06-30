@@ -29,7 +29,7 @@ const asideToggler = () => {
     <section
       v-show="isAsideOpen"
       id="aside"
-      class="w-3xs absolute left-0 z-50 top-0 dark:bg-on-surface text-on-primary h-[100vh]"
+      class="w-3xs absolute left-0 z-50 top-0 dark:bg-secondary text-on-primary h-[100vh]"
     >
       <div class="flex flex-col mb-5 pt-5 items-center">
         <div id="userImageAndName" class="">
@@ -51,15 +51,15 @@ const asideToggler = () => {
       <ul id="links" class="text-tiny flex flex-col">
         <li>
           <RouterLink
-            class="flex items-center px-5 py-4 hover:bg-secondary"
-            to=""
+            class="flex items-center px-5 py-4 hover:bg-on-surface"
+            to="/AddTask"
             ><font-awesome-icon icon="plus" />
             <p class="ml-2">Add task</p></RouterLink
           >
         </li>
         <li>
           <RouterLink
-            class="flex items-center px-5 py-4 hover:bg-secondary"
+            class="flex items-center px-5 py-4 hover:bg-on-surface"
             to=""
             ><font-awesome-icon icon="list" />
             <p class="ml-2">Today</p></RouterLink
@@ -67,7 +67,7 @@ const asideToggler = () => {
         </li>
         <li>
           <RouterLink
-            class="flex items-center px-5 py-4 hover:bg-secondary"
+            class="flex items-center px-5 py-4 hover:bg-on-surface"
             to=""
           >
             <font-awesome-icon icon="calendar-days" />
@@ -76,7 +76,7 @@ const asideToggler = () => {
         </li>
         <li>
           <RouterLink
-            class="flex items-center px-5 py-4 hover:bg-secondary"
+            class="flex items-center px-5 py-4 hover:bg-on-surface"
             to=""
           >
             <font-awesome-icon icon="folder-open" />
@@ -85,7 +85,7 @@ const asideToggler = () => {
         </li>
         <li>
           <RouterLink
-            class="flex items-center px-5 py-4 hover:bg-secondary"
+            class="flex items-center px-5 py-4 hover:bg-on-surface"
             to="/settings"
           >
             <font-awesome-icon icon="gear" />
@@ -94,7 +94,7 @@ const asideToggler = () => {
         </li>
         <li class="mt-30 md:mt-50">
           <RouterLink
-            class="flex items-center px-5 py-4 hover:bg-secondary"
+            class="flex items-center px-5 py-4 hover:bg-on-surface"
             to=""
           >
             <font-awesome-icon icon="arrow-right-from-bracket" />

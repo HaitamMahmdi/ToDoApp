@@ -1,10 +1,7 @@
 <script setup>
 /**
  * TODO: Make the page actually update user data and informations and theme
- * TODO: Make the page responsive to bigger screens
- * TODO: Add danger zone for delete user
- * TODO: Add update password
- * !FIX: Users must verifie ther Emails!!! to be able to chang to a new account
+ * !FIX: Users must verifie their  Emails!!! to be able to chang to a new account
  */
 import { useAuthStore } from "../../stors/AuthStore";
 import { useThemeStore } from "../../stors/ThemeStore";

@@ -2,6 +2,7 @@
 /**
  * TODO:Subscribe to Firebase Storage so users can upload their profile images.
  * ! FIX: Error whene user try create profile with existing Email
+ * !FIX : Add new phase for account verifie
  * TODO: Make all the validation functions into one function or component
  */
 import { computed, ref, watch } from "vue";

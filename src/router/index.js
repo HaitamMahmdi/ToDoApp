@@ -15,13 +15,18 @@ const routes = [
   },
   {
     name: "dashboard",
-    path: "/dashboard",
+    path: "/Dashboard",
     component: () => import("../views/dashbord/index.vue"),
     children: [
       {
         path: "/settings",
-        name: "settings",
+        name: "Settings",
         component: () => import("../views/dashbord/SettingsView.vue"),
+      },
+      {
+        path: "/AddTask",
+        name: "AddTask",
+        component: () => import("../views/dashbord/AddTaskView.vue"),
       },
     ],
   },
