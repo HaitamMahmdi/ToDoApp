@@ -5,19 +5,27 @@
  */
 import { useTaskeStore } from "../../stors/TaskStore";
 import InputCom from "../../components/InputCom.vue";
-import { ref } from "vue";
+import InputComponent from "../../components/InputComponent.vue";
+import { ref, computed } from "vue";
 const taskStore = useTaskeStore();
-taskStore.getTasks();
+const date = new Date();
+const dateToday = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+  2,
+  "0"
+)}-${String(date.getDate()).padStart(2, "0")}`;
 
 const teskName = ref("");
 const taskDescription = ref("");
-const date = ref("");
+const inProgressAt = ref("");
+const deadline = ref("");
 const priority = ref("");
 const steps = ref([]);
+const category = ref("");
 const step = ref("");
+
 const handleDateChange = (event) => {
   const value = event.target.value;
-  date.value = value;
+  inProgressAt.value = value;
 };
 const addSteps = () => {
   steps.value.push({ stepText: step.value, id: steps.value.length + 1 });
@@ -25,47 +33,101 @@ const addSteps = () => {
 const removeStep = (index) => {
   steps.value.splice(index, 1);
 };
+const pushNewTask = async () => {
+  try {
+    await taskStore.addTasks(
+      teskName.value,
+      inProgressAt.value,
+      deadline.value,
+      taskDescription.value,
+      priority.value,
+      steps.value,
+      category.value
+    );
+  } catch (error) {
+    console.error("Failed to add task:", error);
+  }
+};
+const minDate = computed(() => {
+  const validFormat = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+  const dateTodays = date.toISOString().split("T")[0];
+
+  if (!validFormat.test(inProgressAt.value)) return dateTodays;
+
+  const [, year, month, day] = inProgressAt.value.match(
+    /^(\d{4})-(\d{2})-(\d{2})$/
+  );
+  const nextDay = String(Number(day) + 1).padStart(2, "0");
+
+  return `${year}-${month}-${nextDay}`;
+});
 </script>
 <template>
-  <section class="py-10 grow dark:text-on-primary container px-4 mx-auto">
-    <h2 class="text-[clamp(2.5rem,5vw,4rem)] font-bold">Add New Task</h2>
-    <form class="flex flex-wrap justify-between" @submit.prevent action="">
+  <section
+    class="py-10 text-center lg:text-left grow dark:text-on-primary container px-4 mx-auto"
+  >
+    <h2 class="text-[clamp(2.5rem,5vw,4rem)] mb-5 font-bold">Add New Task</h2>
+    <form
+      class="flex flex-wrap flex-col lg:flex-row items-center lg:items-start justify-center"
+      @submit.prevent
+      @keydown.enter.prevent
+    >
       <div class="max-w-4/5">
-        <div class="flex flex-col">
-          <label class="font-semibold mb-2 text-3xl" for="taskName"
-            >Task Name {{ teskName }}</label
-          >
+        <InputComponent
+          v-model="teskName"
+          label="Task Titel"
+          inputType="text"
+          id="newInput"
+          name="input"
+          :isRequired="true"
+          cusclass="px-5 py-3"
+          :helperText="true"
+          :addValidateToText="true"
+        />
+        <div class="mt-5">
+          <label class="font-semibold text-3xl" for="date"
+            >Start Task At:
+          </label>
           <input
-            v-model="teskName"
-            class="pl-2 dark:focus:bg-on-primary bg-on-surface text-tiny px-5 py-3 w-full dark:focus:text-on-surface"
-            type="text"
+            v-model="inProgressAt"
+            class="pl-2 dark:focus:bg-on-primary mt-2 bg-on-surface text-tiny px-5 py-3 w-full dark:focus:text-on-surface"
+            type="date"
+            :min="dateToday"
+            max="2026-12-12"
             name=""
             id=""
+            required
           />
         </div>
         <div class="mt-5">
-          <label class="font-semibold mb-50 text-3xl" for="date">Date</label>
+          <label class="font-semibold text-3xl" for="date"
+            >to be finished at:</label
+          >
           <input
-            @input="handleDateChange"
-            class="pl-2 dark:focus:bg-on-primary bg-on-surface text-tiny px-5 py-3 w-full dark:focus:text-on-surface"
+            class="pl-2 dark:focus:bg-on-primary mt-2 bg-on-surface text-tiny px-5 py-3 w-full dark:focus:text-on-surface"
             type="date"
+            v-model="deadline"
+            :min="minDate"
+            max="2026-12-12"
             name=""
             id=""
+            required
           />
         </div>
+
         <div class="mt-5">
           <label class="text-3xl font-semibold" for="Description"
             >Description</label
           >
           <textarea
             v-model="taskDescription"
-            class="bg-on-surface mt-4 font-semibold text-tiny dark:focus:bg-on-primary rounded-3xl h-96 dark:focus:text-on-surface p-10 w-full"
+            class="bg-on-surface mt-4 font-semibold text-tiny dark:focus:bg-on-primary rounded-3xl h-96 dark:focus:text-on-surface p-5 lg:p-10 w-full"
             name="Description"
             id="Description"
           ></textarea>
         </div>
       </div>
-      <div class="grow px-10">
+      <div class="grow lg:px-10">
         <div
           class="w-full bg-on-surface p-10 flex flex-col justify-center items-center mx-auto"
         >
@@ -120,23 +182,31 @@ const removeStep = (index) => {
             </li>
           </ul>
         </div>
+        <InputComponent
+          v-model="category"
+          label="Category"
+          inputType="text"
+          id="category"
+          name="category"
+          :isRequired="true"
+          class="mb-5 mt-4"
+          placeholder="# category"
+          cusclass="px-5 py-3"
+          :helperText="true"
+          :addValidateToText="true"
+        />
         <div>
-          <form
-            @submit.prevent="addSteps"
-            class="flex justify-between flex-wrap items-center mt-5"
-          >
-            <h3 class="text-3xl font-semibold">Add steps</h3>
-            <button
-              class="p-3 text-2xl dark:bg-on-primary dark:text-on-surface"
-            >
-              <font-awesome-icon icon="plus" />
-            </button>
-            <input
-              v-model="step"
-              type="text"
-              class="w-4/6 block px-3 py-10 text-tiny h-8 dark:focus:bg-on-primary bg-on-surface dark:focus:text-on-surface"
-            />
-          </form>
+          <InputComponent
+            v-model="step"
+            label="Add steps"
+            inputType="text"
+            id="step"
+            name="step"
+            @keydown.enter="addSteps"
+            :addValidateToText="false"
+            class="mb-5 mt-4 w-full"
+            cusclass="px-5 py-3"
+          />
 
           <ul class="mt-5">
             <li
@@ -161,13 +231,14 @@ const removeStep = (index) => {
       </div>
       <div class="w-full mt-5">
         <input
+          @click="pushNewTask"
           type="submit"
-          class="bg-button-color text-on-primary text-tiny p-2 px-4 rounded-2xl"
+          class="bg-button-color cursor-pointer text-on-primary text-tiny p-2 px-4 rounded-2xl"
           value="Add Task"
         />
         <input
           type="reset"
-          class="bg-error ml-10 text-on-primary text-tiny p-2 px-4 rounded-2xl"
+          class="bg-error cursor-pointer ml-10 text-on-primary text-tiny p-2 px-4 rounded-2xl"
           value="Reset"
         />
       </div>
