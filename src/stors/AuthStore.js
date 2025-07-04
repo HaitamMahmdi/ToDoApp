@@ -19,14 +19,17 @@ export const useAuthStore = defineStore("authStore", {
   }),
   actions: {
     checkAuth() {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          this.user = user;
-          console.log("user is logged-in");
-        } else {
-          this.user = null;
-          console.log("user is not signed in");
-        }
+      return new Promise((resolve, reject) => {
+        const unsubscribe = onAuthStateChanged(
+          auth,
+          (user) => {
+            this.user = user;
+            this.isAuthReady = true;
+            unsubscribe(); // stop listening after first call
+            resolve(user); // ✅ now it's awaitable
+          },
+          reject
+        );
       });
     },
 

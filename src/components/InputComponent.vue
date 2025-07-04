@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-
+const emit = defineEmits(["isvalidVal"]);
 const {
   inputType,
   id,
@@ -11,6 +11,8 @@ const {
   addValidateToText,
   isRequired,
   cusclass,
+  inputReadonly,
+  lableStyle,
 } = defineProps({
   inputType: String,
   id: String,
@@ -21,13 +23,15 @@ const {
   addValidateToText: Boolean,
   isRequired: Boolean,
   cusclass: String,
+  inputReadonly: Boolean,
+  lableStyle: String,
 });
 
 const val = defineModel();
 const isvalid = ref(null);
 const validationFeedback = ref("");
 const validate = () => {
-  const nameRegx = /^[A-Za-z]+$/;
+  const nameRegx = /^[A-Za-z\s]+$/;
   const emailRegx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordRegex =
     /^(?=\S{8,16}$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])/;
@@ -35,6 +39,8 @@ const validate = () => {
   if (!val.value && isRequired) {
     isvalid.value = false;
     validationFeedback.value = `This field is required!`;
+    console.log(`ssss`);
+    emit("isvalidVal", isvalid.value);
     return;
   }
   if (inputType === "email") {
@@ -65,14 +71,18 @@ const validate = () => {
       validationFeedback.value = "Looks good!";
     }
   }
+  emit("isvalidVal", isvalid.value);
 };
 </script>
 
 <template>
-  <div v-bind="$attrs" class="flex flex-col">
-    <label :for="id || 'text`'" class="font-semibold mb-2 text-3xl">{{
-      label
-    }}</label>
+  <div v-bind="$attrs" class="flex flex-col relative">
+    <label
+      :for="id || 'text`'"
+      :class="[lableStyle]"
+      class="font-semibold mb-2"
+      >{{ label }}</label
+    >
     <input
       @input="validate"
       :type="inputType || 'text'"
@@ -80,18 +90,20 @@ const validate = () => {
       v-model="val"
       :id="id || 'text'"
       :name="name || 'text'"
-      class="dark:bg-on-surface focus:bg-on-primary font-semibold w-full"
+      class="dark:bg-on-surface font-semibold"
+      :readonly="inputReadonly"
       :class="[
         isvalid === null
-          ? ' text-on-surface '
+          ? ' text-on-surface  placeholder:text-[#dddd]'
           : isvalid
           ? 'border-success  border text-success  '
           : 'border-error text-error border placeholder:text-error',
         cusclass,
+        inputReadonly ? '' : 'focus:bg-on-primary',
       ]"
     />
     <div
-      class="flex items-center"
+      class="flex items-center absolute bottom-[-1.4rem]"
       :class="[
         isvalid === null ? 'hidden' : isvalid ? ' text-success' : ' text-error',
       ]"

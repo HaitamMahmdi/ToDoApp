@@ -28,6 +28,11 @@ const routes = [
         name: "AddTask",
         component: () => import("../views/dashbord/AddTaskView.vue"),
       },
+      {
+        path: "/Tasks",
+        name: "Tasks",
+        component: () => import("../views/dashbord/TasksView.vue"),
+      },
     ],
   },
 ];

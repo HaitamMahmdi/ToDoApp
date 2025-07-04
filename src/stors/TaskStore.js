@@ -4,11 +4,10 @@
 
 import { defineStore } from "pinia";
 import { useAuthStore } from "./AuthStore";
+import { getUserData } from "../utilities/getUserData";
 import {
   getFirestore,
   doc,
-  getDoc,
-  collection,
   onSnapshot,
   updateDoc,
   arrayUnion,
@@ -18,23 +17,56 @@ export const useTaskeStore = defineStore("taskStore", {
     tasks: null,
   }),
   getters: {
-    async getTodayTasks() {
-      if (!this.tasks) await getTasks();
+    getTodayTasks() {
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const formattedDate = `${year}-${month}-${day}`;
+      const todyTasks = [];
+      if (this.tasks) {
+        for (let task of this.tasks) {
+          if (task?.inProgressAt === formattedDate) {
+            todyTasks.push(task);
+          }
+        }
+        return todyTasks;
+      }
     },
   },
   actions: {
+    async startRealtimeSync() {
+      console.log("SNAPSHOT FIRED 🔥");
+      const authStore = useAuthStore();
+      const user = authStore.user;
+
+      if (user) {
+        const db = getFirestore();
+        const docRef = doc(db, `users`, `user-${user.uid}`);
+
+        onSnapshot(docRef, (docSnap) => {
+          const data = docSnap.data();
+          if (data && data.tasks) {
+            this.tasks = data.tasks.map((task) => ({ ...task })); // deep clone
+          } else {
+            this.tasks = [];
+          }
+        });
+      }
+    },
+    /*
     async getTasks() {
       const authStore = useAuthStore();
       const user = authStore.user;
-      if (user) {
+      if (user && !this.tasks) {
         const db = getFirestore();
-        console.log(this.user);
         const docRef = doc(db, `users`, `user-${user.uid}`);
         const docSnap = await getDoc(docRef);
         const data = docSnap.data();
-        this.tasks = data.tasks;
+        this.tasks = data.tasks.map((task) => ({ ...task }));
       }
     },
+    */
     async addTasks(
       taskName = null,
       inProgressAt = null,
@@ -42,35 +74,74 @@ export const useTaskeStore = defineStore("taskStore", {
       Description = null,
       priority = null,
       steps = null,
-      category = null,
-      image = null
+      category = `none`,
+      image = null,
+      categoryColor = "#ef4444"
     ) {
-      const authStore = useAuthStore();
-      const user = authStore.user;
-      const db = getFirestore();
-      const docRef = doc(db, `users`, `user-${user.uid}`);
+      const { docRef, data } = await getUserData();
+
       const date = new Date();
-      const year =
-        date.getFullYear() < 10 ? `0${date.getFullYear()}` : date.getFullYear();
-      const month =
-        date.getMonth() + 1 < 10
-          ? `0${date.getMonth() + 1}`
-          : date.getMonth() + 1;
-      const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
       await updateDoc(docRef, {
         tasks: arrayUnion({
-          id: `${taskName}-${this.tasks?.length || 1}`,
-          taskName: taskName,
+          taskName,
           addAt: `${year}-${month}-${day}`,
-          inProgressAt: inProgressAt,
-          deadline: deadline,
-          Description: Description,
-          priority: priority,
-          steps: steps,
+          inProgressAt,
+          deadline,
+          description: Description,
+          priority,
+          status: "not started",
+          completionRate: 0,
+          steps,
+          originalStepsCount: steps.length,
           category: `${category}`,
-          image: image,
+          categoryColor: categoryColor,
+          image,
+          id: crypto.randomUUID(),
         }),
       });
+      console.log(`task add`);
     },
+    async updateTask(ID, key, newVal) {
+      console.log(ID);
+      try {
+        const { docRef, data } = await getUserData();
+        const arr = data.tasks || [];
+
+        const index = arr.findIndex((task) => task.id === ID);
+        if (index === -1) {
+          throw new Error(`Task with ID ${ID} not found`);
+        }
+
+        const updatedTask = {
+          ...arr[index],
+          [key]: newVal,
+          updatedAt: new Date().toISOString(), // لضمان التحديث في Firestore
+        };
+
+        const updatedTasks = [...arr];
+        updatedTasks[index] = updatedTask;
+
+        await updateDoc(docRef, {
+          tasks: updatedTasks,
+        });
+
+        console.log(`✅ Task with ID ${ID} updated: [${key}] =`, newVal);
+      } catch (err) {
+        console.error(`❌ Failed to update task:`, err.message, err);
+      }
+    },
+    async removeTask(id) {
+      const { docRef, data } = await getUserData();
+      const arr = data?.tasks || this.tasks || [];
+      const updatedTasks = arr.filter((task) => task.id !== id);
+      await updateDoc(docRef, {
+        tasks: updatedTasks,
+      });
+    },
+    async updateCompletionRate(ID) {},
   },
 });

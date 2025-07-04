@@ -10,7 +10,6 @@ import {
   reauthenticateWithCredential,
   updateEmail,
 } from "firebase/auth";
-import InputCom from "../../components/InputCom.vue";
 import { computed, ref, watch } from "vue";
 const authStore = useAuthStore();
 authStore.checkAuth();
@@ -124,7 +123,7 @@ const submitNewEmailAndNameAndPassword = async () => {
 };
 </script>
 <template>
-  <section class="py-10 grow container px-4 mx-auto">
+  <section class="py-10 grow md:w-[calc(100%-256px)] container px-4 mx-auto">
     <ul class="mx-auto">
       <li class="flex flex-col items-center mt-10">
         <ul>

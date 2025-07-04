@@ -1,12 +1,8 @@
 <script setup>
-/**
- * TODO:add validation and ruls to the input fields.
- *
- */
 import { useTaskeStore } from "../../stors/TaskStore";
-import InputCom from "../../components/InputCom.vue";
 import InputComponent from "../../components/InputComponent.vue";
-import { ref, computed } from "vue";
+import { ref, computed, reactive } from "vue";
+import SelectTaskPriorityCom from "../../components/tasks/SelectTaskPriorityCom.vue";
 const taskStore = useTaskeStore();
 const date = new Date();
 const dateToday = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
@@ -18,34 +14,50 @@ const teskName = ref("");
 const taskDescription = ref("");
 const inProgressAt = ref("");
 const deadline = ref("");
-const priority = ref("");
+const priority = ref("moderate");
 const steps = ref([]);
 const category = ref("");
+const color = ref("#DDD");
 const step = ref("");
 
-const handleDateChange = (event) => {
-  const value = event.target.value;
-  inProgressAt.value = value;
-};
+const isvalidInput = reactive({
+  taskName: null,
+  category: null,
+  step: null,
+});
+
 const addSteps = () => {
-  steps.value.push({ stepText: step.value, id: steps.value.length + 1 });
+  steps.value.push({
+    stepText: step.value,
+    id: steps.value.length === 0 ? steps.value.length : steps.value.length - 1,
+    objID: crypto.randomUUID(),
+    originalStepsCount: steps.value.length,
+  });
 };
 const removeStep = (index) => {
   steps.value.splice(index, 1);
 };
 const pushNewTask = async () => {
-  try {
-    await taskStore.addTasks(
-      teskName.value,
-      inProgressAt.value,
-      deadline.value,
-      taskDescription.value,
-      priority.value,
-      steps.value,
-      category.value
-    );
-  } catch (error) {
-    console.error("Failed to add task:", error);
+  if (!isvalidInput.taskName || !isvalidInput.category || !isvalidInput.step) {
+    return;
+  } else {
+    console.log(color.value);
+    try {
+      await taskStore.addTasks(
+        teskName.value,
+        inProgressAt.value,
+        deadline.value,
+        taskDescription.value,
+        priority.value,
+        steps.value,
+        category.value,
+        "",
+        color.value
+      );
+      console.log(`task add`);
+    } catch (error) {
+      console.error("Failed to add task:", error);
+    }
   }
 };
 const minDate = computed(() => {
@@ -64,12 +76,15 @@ const minDate = computed(() => {
 </script>
 <template>
   <section
-    class="py-10 text-center lg:text-left grow dark:text-on-primary container px-4 mx-auto"
+    class="py-10 md:w-[calc(100%-256px)] text-center lg:text-left grow dark:text-on-primary container px-4 mx-auto"
   >
+    {{ isvalidInput.taskName }}
+    {{ isvalidInput.step }}
+    {{ isvalidInput.category }}
     <h2 class="text-[clamp(2.5rem,5vw,4rem)] mb-5 font-bold">Add New Task</h2>
     <form
       class="flex flex-wrap flex-col lg:flex-row items-center lg:items-start justify-center"
-      @submit.prevent
+      @submit.prevent="pushNewTask"
       @keydown.enter.prevent
     >
       <div class="max-w-4/5">
@@ -80,6 +95,8 @@ const minDate = computed(() => {
           id="newInput"
           name="input"
           :isRequired="true"
+          @isvalidVal="(n) => (isvalidInput.taskName = n)"
+          lableStyle="text-3xl"
           cusclass="px-5 py-3"
           :helperText="true"
           :addValidateToText="true"
@@ -96,7 +113,6 @@ const minDate = computed(() => {
             max="2026-12-12"
             name=""
             id=""
-            required
           />
         </div>
         <div class="mt-5">
@@ -111,7 +127,6 @@ const minDate = computed(() => {
             max="2026-12-12"
             name=""
             id=""
-            required
           />
         </div>
 
@@ -137,77 +152,49 @@ const minDate = computed(() => {
         </div>
         <div class="mt-4">
           <h3 class="text-3xl mt-10 mb-2 font-semibold">Priority</h3>
-          <ul class="text-tiny flex items-center">
-            <li class="flex cursor-pointer items-center mr-4">
-              <button
-                @click="priority = 'Extreme'"
-                class="flex cursor-pointer my-2 items-center mr-4"
-              >
-                <span
-                  :class="[
-                    priority === 'Extreme' ? 'bg-error' : 'bg-on-primary',
-                  ]"
-                  class="block mr-2 border-2 w-3.5 h-3.5 border-error p-1 rounded-full"
-                ></span>
-                <p>Extreme</p>
-              </button>
-            </li>
-            <li>
-              <button
-                @click="priority = 'Moderate'"
-                class="flex cursor-pointer my-2 items-center mr-4"
-              >
-                <span
-                  :class="[
-                    priority === 'Moderate' ? 'bg-success' : 'bg-on-primary',
-                  ]"
-                  class="block mr-2 border-2 w-3.5 h-3.5 border-success p-1 rounded-full"
-                ></span>
-                <p>Moderate</p>
-              </button>
-            </li>
-            <li>
-              <button
-                class="flex cursor-pointer items-center"
-                @click="priority = 'low'"
-              >
-                <span
-                  :class="[
-                    priority === 'low' ? 'bg-amber-300' : 'bg-on-primary',
-                  ]"
-                  class="block mr-2 border-2 w-3.5 h-3.5 border-amber-300 p-1 rounded-full"
-                ></span>
-                <p>low</p>
-              </button>
-            </li>
-          </ul>
+          {{ priority }}
+          <SelectTaskPriorityCom @selectedPriority="(n) => (priority = n)" />
         </div>
-        <InputComponent
-          v-model="category"
-          label="Category"
-          inputType="text"
-          id="category"
-          name="category"
-          :isRequired="true"
-          class="mb-5 mt-4"
-          placeholder="# category"
-          cusclass="px-5 py-3"
-          :helperText="true"
-          :addValidateToText="true"
-        />
+        <div class="flex items-center relative">
+          <InputComponent
+            v-model="category"
+            label="Category"
+            lableStyle="text-3xl"
+            inputType="text"
+            id="category"
+            name="category"
+            :isRequired="true"
+            class="mb-5 mt-4 grow"
+            @isvalidVal="(n) => (isvalidInput.category = n)"
+            placeholder="# category"
+            cusclass="px-5 py-3"
+            :helperText="true"
+            :addValidateToText="true"
+          />
+
+          <input
+            type="color"
+            name=""
+            v-model="color"
+            :style="{ 'border-color': `${color}` }"
+            class="w-0 h-0 cursor-pointer absolute right-5 top-[45%] transform translate-y-[40%] border-[15px] rounded-full"
+            id=""
+          />
+        </div>
         <div>
           <InputComponent
             v-model="step"
             label="Add steps"
+            lableStyle="text-3xl"
             inputType="text"
             id="step"
             name="step"
             @keydown.enter="addSteps"
-            :addValidateToText="false"
+            :addValidateToText="true"
+            @isvalidVal="(n) => (isvalidInput.step = n)"
             class="mb-5 mt-4 w-full"
             cusclass="px-5 py-3"
           />
-
           <ul class="mt-5">
             <li
               class="dark:bg-on-surface mb-1 text-tiny items-center flex justify-between p-4"
@@ -215,7 +202,6 @@ const minDate = computed(() => {
               :key="step.id"
             >
               <p v-if="step">
-                <span class="text-primary">{{ step.id }}</span>
                 {{ step.stepText }}
               </p>
 
@@ -231,7 +217,6 @@ const minDate = computed(() => {
       </div>
       <div class="w-full mt-5">
         <input
-          @click="pushNewTask"
           type="submit"
           class="bg-button-color cursor-pointer text-on-primary text-tiny p-2 px-4 rounded-2xl"
           value="Add Task"

@@ -1,14 +1,27 @@
 <script setup>
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { useAuthStore } from "./stors/AuthStore";
-const authStore = useAuthStore();
-const user = computed(() => authStore.user);
-import { RouterLink, useRoute } from "vue-router";
+import { useTaskeStore } from "./stors/TaskStore";
 import { useThemeStore } from "./stors/ThemeStore";
+import { RouterLink, useRoute } from "vue-router";
 import FooterCom from "./components/FooterCom.vue";
 
+const authStore = useAuthStore();
+const taskStore = useTaskeStore();
 const themeStore = useThemeStore();
 const route = useRoute();
+
+const user = computed(() => authStore.user);
+
+watch(
+  () => authStore.user,
+  (user) => {
+    if (user) {
+      taskStore.startRealtimeSync();
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -47,8 +60,9 @@ const route = useRoute();
       </div>
     </div>
   </header>
-  <main class="overflow-x-hidden relative min-h-[100vh]">
+
+  <main class="overflow-x-hidden relative">
     <router-view />
   </main>
-  <FooterCom></FooterCom>
+  <FooterCom />
 </template>

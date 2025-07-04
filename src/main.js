@@ -4,9 +4,15 @@ import "./style.css";
 import App from "./App.vue";
 import app from "./firebase";
 import router from "./router";
+const vueApp = createApp(App);
 const pinia = createPinia();
+vueApp.use(pinia);
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
+  faBan,
+  faHourglassStart,
+  faEllipsis,
+  faRotate,
   faTrashCan,
   faExclamation,
   faPenToSquare,
@@ -42,8 +48,12 @@ import {
   faRedditAlien,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
+import { useAuthStore } from "./stors/AuthStore";
 library.add(
+  faBan,
+  faHourglassStart,
+  faEllipsis,
+  faRotate,
   faTrashCan,
   faExclamation,
   faPenToSquare,
@@ -76,9 +86,11 @@ library.add(
   faTelegram,
   faRedditAlien
 );
-createApp(App)
+const authStore = useAuthStore();
+
+const a = await authStore.checkAuth();
+vueApp
   .use(router)
-  .use(pinia)
   .use(app)
   .component("font-awesome-icon", FontAwesomeIcon)
   .mount("#app");
