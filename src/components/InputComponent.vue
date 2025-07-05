@@ -110,6 +110,7 @@ const validate = () => {
           inputReadonly ? '' : 'focus:bg-on-primary',
         ]"
       />
+      <slot name="namedSlot"> </slot>
       <font-awesome-icon
         v-if="inputType === 'password'"
         v-show="!showPassword"

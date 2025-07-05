@@ -78,9 +78,6 @@ const minDate = computed(() => {
   <section
     class="py-10 md:w-[calc(100%-256px)] text-center lg:text-left grow dark:text-on-primary container px-4 mx-auto"
   >
-    {{ isvalidInput.taskName }}
-    {{ isvalidInput.step }}
-    {{ isvalidInput.category }}
     <h2 class="text-[clamp(2.5rem,5vw,4rem)] mb-5 font-bold">Add New Task</h2>
     <form
       class="flex flex-wrap flex-col lg:flex-row items-center lg:items-start justify-center"
@@ -164,22 +161,24 @@ const minDate = computed(() => {
             id="category"
             name="category"
             :isRequired="true"
-            class="mb-5 mt-4 grow"
+            class="mb-5 mt-4 w-full grow"
             @isvalidVal="(n) => (isvalidInput.category = n)"
             placeholder="# category"
-            cusclass="px-5 py-3"
+            cusclass="px-5 w-full py-3"
             :helperText="true"
             :addValidateToText="true"
-          />
-
-          <input
-            type="color"
-            name=""
-            v-model="color"
-            :style="{ 'border-color': `${color}` }"
-            class="w-0 h-0 cursor-pointer absolute right-5 top-[45%] transform translate-y-[40%] border-[15px] rounded-full"
-            id=""
-          />
+          >
+            <template v-slot:namedSlot>
+              <input
+                type="color"
+                name=""
+                v-model="color"
+                :style="{ 'border-color': `${color}` }"
+                class="w-0 h-0 right-5 rounded-full top-3/6 transform -translate-y-3/6 absolute cursor-pointer border-[15px]"
+                id=""
+              />
+            </template>
+          </InputComponent>
         </div>
         <div>
           <InputComponent
@@ -192,8 +191,8 @@ const minDate = computed(() => {
             @keydown.enter="addSteps"
             :addValidateToText="true"
             @isvalidVal="(n) => (isvalidInput.step = n)"
-            class="mb-5 mt-4 w-full"
-            cusclass="px-5 py-3"
+            class="mb-5 mt-4"
+            cusclass="px-5 w-full py-3"
           />
           <ul class="mt-5">
             <li

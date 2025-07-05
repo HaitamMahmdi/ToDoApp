@@ -25,7 +25,6 @@ const {
 const taskDetails = ref(null);
 
 let cleanTaskDetails;
-let cleanupshowOption;
 onMounted(async () => {
   cleanTaskDetails = handleClickOutside(taskDetails, () => {
     emit("taskInfoHide");
@@ -39,13 +38,14 @@ const stepDone = async (e) => {
   e.currentTarget.setAttribute("style", "display: none !important;");
   emit("stepIsDone", stepId, id);
 };
+// class="w-full md:w-3/6 md:left-3/6 md:transform md:-translate-x-3/6 dark:text-on-primary h-fit absolute p-5 pt-0 left-0 dark:bg-secondary"
 </script>
 
 <template>
   <div
     ref="taskDetails"
     v-bind="$attrs"
-    class="w-full md:w-3/6 md:left-3/6 md:transform md:-translate-x-3/6 dark:text-on-primary h-fit absolute p-5 pt-0 left-0 dark:bg-secondary"
+    class="w-full md:w-md top-0 dark:text-on-primary h-full overflow-y-scroll fixed z-50 p-5 pt-0 right-0 dark:bg-secondary"
   >
     <div class="w-full my-5">
       <h2 class="text-3xl font-semibold">#{{ category }}</h2>

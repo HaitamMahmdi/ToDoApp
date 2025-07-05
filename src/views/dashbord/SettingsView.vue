@@ -205,19 +205,19 @@ const submitNewPassword = async () => {
               <li>
                 <button
                   @click="submitNewPassword"
-                  class="bg-primary mt-5 px-4 py-3 rounded-2xl"
+                  class="bg-primary cursor-pointer mt-5 px-4 py-3 rounded-2xl"
                 >
                   Submit changes
                 </button>
               </li>
-              <li class="relative border h-32 p-4 mt-20 border-error">
+              <li class="relative border p-4 mt-20 border-error">
                 <h3
                   class="text-3xl top-[-20%] dark:bg-surface px-4 absolute font-semibold text-error"
                 >
                   Danger zone
                 </h3>
 
-                <p class="flex justify-between items-center">
+                <p class="flex mt-5 justify-between items-center">
                   <span class="text-tiny">Delete my account</span>
                   <button
                     @click="authStore.deleteAccount"

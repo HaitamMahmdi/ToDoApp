@@ -1,4 +1,7 @@
 <script setup>
+/**
+ * TODO:Subscribe to Firebase Storage so users can upload their profile images.
+ */
 import { computed, reactive, ref, watch } from "vue";
 import { useAuthStore } from "../stores/AuthStore";
 import InputComponent from "../components/InputComponent.vue";

@@ -9,6 +9,7 @@ const pinia = createPinia();
 vueApp.use(pinia);
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
+  faCircleInfo,
   faBan,
   faHourglassStart,
   faEllipsis,
@@ -50,6 +51,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useAuthStore } from "./stores/AuthStore";
 library.add(
+  faCircleInfo,
   faBan,
   faHourglassStart,
   faEllipsis,

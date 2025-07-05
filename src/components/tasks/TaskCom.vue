@@ -102,7 +102,7 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
           @click="showIfo"
           class="flex justify-between hover:text-Clickable cursor-pointer ml-2 grow items-center"
         >
-          <span class="text-tiny">{{
+          <span class="text-tiny ml-">{{
             taskobj.taskName.length >= 18
               ? taskobj.taskName.slice(0, 17) + `...`
               : taskobj.taskName
@@ -112,8 +112,12 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
               'background-color': taskobj.categoryColor,
             }"
             :class="[color ? ` text-on-surface ` : `text-on-primary`]"
-            class="rounded-2xl p-1"
-            >#{{ taskobj.category }}</span
+            class="rounded-2xl ml-2 p-1"
+            >#{{
+              taskobj.category.length > 7
+                ? taskobj.category.slice(0, 7) + `..`
+                : taskobj.category
+            }}</span
           >
         </h2>
         <div class="relative">
@@ -191,7 +195,7 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
 
           <span
             :class="[
-              taskobj.status === 'In Progress'
+              taskobj.status === 'In Progress' || taskobj.status === 'done'
                 ? ' text-primary'
                 : ' text-error',
             ]"

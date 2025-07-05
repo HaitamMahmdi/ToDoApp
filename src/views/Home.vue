@@ -13,7 +13,6 @@ if (authStore.user) {
   const router = useRouter();
   router.push("/index");
 }
-const router = useRouter();
 </script>
 
 <template>

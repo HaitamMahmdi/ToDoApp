@@ -46,6 +46,7 @@ let position = ``;
 </script>
 <template>
   <div
+    v-if="tasks.length"
     class="container md:w-[calc(100%-256px)] min-h-[100vh] flex flex-wrap gap-1.5 justify-center md:p-4 relative mx-auto"
   >
     <div class="w-full flex flex-wrap">
@@ -107,8 +108,17 @@ let position = ``;
         @taskInfoHide="showInfoOf = null"
         @stepIsDone="stepDone"
         :task="showInfoOf"
-        :style="{ top: `${position}px` }"
       />
+    </div>
+  </div>
+  <div
+    v-else
+    class="container md:w-[calc(100%-256px)] min-h-[100vh] flex flex-wrap gap-1.5 justify-center md:p-4 relative mx-auto"
+  >
+    <div class="h-full flex justify-center items-center">
+      <h1 class="dark:text-on-primary font-bold text-[clamp(2rem,5vw,7rem)]">
+        You have no tasks
+      </h1>
     </div>
   </div>
 </template>

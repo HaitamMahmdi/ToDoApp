@@ -74,18 +74,10 @@ watch(user.value, () => {
               class="flex items-center px-5 py-4 hover:bg-on-surface"
               to="/Tasks"
               ><font-awesome-icon icon="list" />
-              <p class="ml-2">Today</p></RouterLink
+              <p class="ml-2">Tasks</p></RouterLink
             >
           </li>
-          <li class="w-full">
-            <RouterLink
-              class="flex items-center px-5 py-4 hover:bg-on-surface"
-              to=""
-            >
-              <font-awesome-icon icon="calendar-days" />
-              <p class="ml-2">Upcoming</p>
-            </RouterLink>
-          </li>
+
           <li class="w-full">
             <RouterLink
               class="flex items-center px-5 py-4 hover:bg-on-surface"
@@ -102,6 +94,15 @@ watch(user.value, () => {
             >
               <font-awesome-icon icon="gear" />
               <p class="ml-2">Settings</p>
+            </RouterLink>
+          </li>
+          <li class="w-full">
+            <RouterLink
+              class="flex items-center px-5 py-4 hover:bg-on-surface"
+              to=""
+            >
+              <font-awesome-icon icon="circle-info" />
+              <p class="ml-2">help</p>
             </RouterLink>
           </li>
         </ul>
