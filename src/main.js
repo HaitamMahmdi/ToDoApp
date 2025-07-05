@@ -48,7 +48,7 @@ import {
   faRedditAlien,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { useAuthStore } from "./stors/AuthStore";
+import { useAuthStore } from "./stores/AuthStore";
 library.add(
   faBan,
   faHourglassStart,

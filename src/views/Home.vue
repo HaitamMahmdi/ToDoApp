@@ -6,6 +6,13 @@
  */
 import { useRouter } from "vue-router";
 import SliderCom from "../components/SliderCom.vue";
+import { useAuthStore } from "../stores/AuthStore";
+const authStore = useAuthStore();
+authStore.checkAuth();
+if (authStore.user) {
+  const router = useRouter();
+  router.push("/index");
+}
 const router = useRouter();
 </script>
 

@@ -54,19 +54,6 @@ export const useTaskeStore = defineStore("taskStore", {
         });
       }
     },
-    /*
-    async getTasks() {
-      const authStore = useAuthStore();
-      const user = authStore.user;
-      if (user && !this.tasks) {
-        const db = getFirestore();
-        const docRef = doc(db, `users`, `user-${user.uid}`);
-        const docSnap = await getDoc(docRef);
-        const data = docSnap.data();
-        this.tasks = data.tasks.map((task) => ({ ...task }));
-      }
-    },
-    */
     async addTasks(
       taskName = null,
       inProgressAt = null,
@@ -142,6 +129,8 @@ export const useTaskeStore = defineStore("taskStore", {
         tasks: updatedTasks,
       });
     },
-    async updateCompletionRate(ID) {},
+    resetTasksStore() {
+      this.tasks = null;
+    },
   },
 });

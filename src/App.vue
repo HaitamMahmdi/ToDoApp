@@ -1,8 +1,8 @@
 <script setup>
 import { computed, watch } from "vue";
-import { useAuthStore } from "./stors/AuthStore";
-import { useTaskeStore } from "./stors/TaskStore";
-import { useThemeStore } from "./stors/ThemeStore";
+import { useAuthStore } from "./stores/AuthStore";
+import { useTaskeStore } from "./stores/TaskStore";
+import { useThemeStore } from "./stores/ThemeStore";
 import { RouterLink, useRoute } from "vue-router";
 import FooterCom from "./components/FooterCom.vue";
 
@@ -61,7 +61,7 @@ watch(
     </div>
   </header>
 
-  <main class="overflow-x-hidden relative">
+  <main class="relative">
     <router-view />
   </main>
   <FooterCom />

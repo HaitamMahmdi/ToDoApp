@@ -1,5 +1,5 @@
 import { getFirestore, getDoc, setDoc, doc } from "firebase/firestore";
-import { useAuthStore } from "../stors/AuthStore";
+import { useAuthStore } from "../stores/AuthStore";
 export async function getUserData() {
   const authStore = useAuthStore();
   await authStore.checkAuth(); // 🔁 wait for Firebase to finish

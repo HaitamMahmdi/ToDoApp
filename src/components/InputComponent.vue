@@ -30,6 +30,8 @@ const {
 const val = defineModel();
 const isvalid = ref(null);
 const validationFeedback = ref("");
+const showPassword = ref(false);
+
 const validate = () => {
   const nameRegx = /^[A-Za-z\s]+$/;
   const emailRegx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -39,7 +41,6 @@ const validate = () => {
   if (!val.value && isRequired) {
     isvalid.value = false;
     validationFeedback.value = `This field is required!`;
-    console.log(`ssss`);
     emit("isvalidVal", isvalid.value);
     return;
   }
@@ -83,27 +84,63 @@ const validate = () => {
       class="font-semibold mb-2"
       >{{ label }}</label
     >
-    <input
-      @input="validate"
-      :type="inputType || 'text'"
-      :placeholder="placeholder || ''"
-      v-model="val"
-      :id="id || 'text'"
-      :name="name || 'text'"
-      class="dark:bg-on-surface font-semibold"
-      :readonly="inputReadonly"
-      :class="[
-        isvalid === null
-          ? ' text-on-surface  placeholder:text-[#dddd]'
-          : isvalid
-          ? 'border-success  border text-success  '
-          : 'border-error text-error border placeholder:text-error',
-        cusclass,
-        inputReadonly ? '' : 'focus:bg-on-primary',
-      ]"
-    />
+    <div class="w-full relative">
+      <input
+        @input="validate"
+        :type="
+          inputType === 'password'
+            ? showPassword
+              ? 'text'
+              : 'password'
+            : inputType
+        "
+        :placeholder="placeholder || ''"
+        v-model="val"
+        :id="id || 'text'"
+        :name="name || 'text'"
+        class="dark:bg-on-surface border pl-10 font-semibold"
+        :readonly="inputReadonly"
+        :class="[
+          isvalid === null
+            ? '   border-on-surface text-on-primary focus:text-on-surface  placeholder:text-[#dddd]'
+            : isvalid
+            ? 'border-success   text-success  '
+            : 'border-error text-error  placeholder:text-error',
+          cusclass,
+          inputReadonly ? '' : 'focus:bg-on-primary',
+        ]"
+      />
+      <font-awesome-icon
+        v-if="inputType === 'password'"
+        v-show="!showPassword"
+        @click="showPassword = !showPassword"
+        :class="[
+          isvalid === null
+            ? 'text-secondary peer-focus:text-on-surface'
+            : isvalid
+            ? 'text-success'
+            : 'text-error',
+        ]"
+        class="absolute text-2xl cursor-pointer left-2 top-3/6 transform -translate-y-2/4"
+        icon="eye"
+      />
+      <font-awesome-icon
+        v-if="inputType === 'password'"
+        icon="eye-slash"
+        :class="[
+          isvalid === null
+            ? 'text-on-primary peer-focus:text-on-surface'
+            : isvalid
+            ? 'text-success'
+            : 'text-error',
+        ]"
+        class="absolute text-2xl cursor-pointer left-2 top-3/6 transform -translate-y-2/4"
+        v-show="showPassword"
+        @click="showPassword = !showPassword"
+      />
+    </div>
     <div
-      class="flex items-center absolute bottom-[-1.4rem]"
+      class="flex items-center"
       :class="[
         isvalid === null ? 'hidden' : isvalid ? ' text-success' : ' text-error',
       ]"

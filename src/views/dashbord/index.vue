@@ -5,9 +5,10 @@
  * ? Add animation
  * TODO => Add nested routers (Upcoming,Categories,Settings....)
  */
-import { computed, ref } from "vue";
-import { useAuthStore } from "../../stors/AuthStore";
-import { RouterLink, RouterView } from "vue-router";
+import { computed, ref, watch } from "vue";
+import { useAuthStore } from "../../stores/AuthStore";
+import { RouterLink, RouterView, useRouter } from "vue-router";
+const router = useRouter();
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
 authStore.checkAuth();
@@ -15,9 +16,20 @@ const isAsideOpen = ref(true);
 const asideToggler = () => {
   isAsideOpen.value = !isAsideOpen.value;
 };
+const logOutUser = async () => {
+  await authStore.logOut();
+};
+if (!user.value) {
+  router.push("/");
+}
+watch(user.value, () => {
+  if (!user.value) {
+    router.push("/");
+  }
+});
 </script>
 <template>
-  <section class="flex flex-wrap pt-20 md:pt-0">
+  <section class="flex flex-wrap min-h-[100vh] pt-20 md:pt-0">
     <button
       @click="asideToggler"
       class="z-60 fixed md:hidden top-0 left-0 cursor-pointer p-5 bg-on-primary w-9 h-9 flex items-center justify-center"
@@ -95,13 +107,13 @@ const asideToggler = () => {
         </ul>
       </div>
       <div class="mb-20">
-        <RouterLink
-          class="flex items-center px-5 py-4 hover:bg-on-surface"
-          to=""
+        <button
+          @click="authStore.logOut"
+          class="flex items-center w-full cursor-pointer px-5 py-4 hover:bg-on-surface"
         >
           <font-awesome-icon icon="arrow-right-from-bracket" />
           <p class="ml-2">Logout</p>
-        </RouterLink>
+        </button>
       </div>
     </section>
 

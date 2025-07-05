@@ -1,6 +1,6 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { handleClickOutside } from "../../utils/handleClickOutside";
+import { handleClickOutside } from "../../utilities/handleClickOutside";
 const emit = defineEmits([
   "startTask",
   "removeTask",

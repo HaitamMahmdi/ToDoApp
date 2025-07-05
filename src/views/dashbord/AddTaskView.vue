@@ -1,5 +1,5 @@
 <script setup>
-import { useTaskeStore } from "../../stors/TaskStore";
+import { useTaskeStore } from "../../stores/TaskStore";
 import InputComponent from "../../components/InputComponent.vue";
 import { ref, computed, reactive } from "vue";
 import SelectTaskPriorityCom from "../../components/tasks/SelectTaskPriorityCom.vue";
@@ -97,7 +97,7 @@ const minDate = computed(() => {
           :isRequired="true"
           @isvalidVal="(n) => (isvalidInput.taskName = n)"
           lableStyle="text-3xl"
-          cusclass="px-5 py-3"
+          cusclass="px-5 w-full py-3"
           :helperText="true"
           :addValidateToText="true"
         />

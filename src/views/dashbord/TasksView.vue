@@ -2,8 +2,8 @@
 import { computed, onMounted, ref, toRaw } from "vue";
 import TaskCom from "/src/components/tasks/TaskCom.vue";
 import TaskDetailsCom from "../../components/tasks/TaskDetailsCom.vue";
-import { useTaskeStore } from "../../stors/TaskStore";
-import { useAuthStore } from "../../stors/AuthStore";
+import { useTaskeStore } from "../../stores/TaskStore";
+import { useAuthStore } from "../../stores/AuthStore";
 
 const authStore = useAuthStore();
 authStore.checkAuth();
@@ -46,7 +46,6 @@ let position = ``;
 </script>
 <template>
   <div
-    v-if="tasks"
     class="container md:w-[calc(100%-256px)] min-h-[100vh] flex flex-wrap gap-1.5 justify-center md:p-4 relative mx-auto"
   >
     <div class="w-full flex flex-wrap">
@@ -80,7 +79,7 @@ let position = ``;
       />
     </div>
 
-    <div class="w-full">
+    <div class="w-full flex flex-wrap">
       <h2
         class="text-[clamp(2.5rem,5vw,3rem)] mb-5 ml-5 font-bold w-full dark:text-on-primary"
       >

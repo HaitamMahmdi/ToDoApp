@@ -6,11 +6,15 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   deleteUser,
-  updateEmail,
   updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  signOut,
 } from "@firebase/auth";
-import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, deleteDoc } from "firebase/firestore";
+import { useTaskeStore } from "./TaskStore";
 import app from "../firebase";
+import { getUserData } from "../utilities/getUserData";
 const auth = getAuth(app);
 
 export const useAuthStore = defineStore("authStore", {
@@ -54,7 +58,7 @@ export const useAuthStore = defineStore("authStore", {
           photoURL: userProfileImagePath,
         });
       } catch (err) {
-        console.error("Sign-up error:", err.code, err.message);
+        return err;
       }
     },
 
@@ -67,13 +71,20 @@ export const useAuthStore = defineStore("authStore", {
         );
         this.user = userCred.user;
       } catch (err) {
-        console.error("Sign-in error:", err.code, err.message);
+        return new Error("You entered a wrong email or password.");
       }
     },
-    async deleteAccount(user) {
+    async deleteAccount() {
       try {
-        if (user) {
+        if (this.user) {
+          const auth = getAuth();
+          const taskStore = useTaskeStore();
+          const user = auth.currentUser;
+          const { docRef } = await getUserData();
+          taskStore.resetTasksStore();
+          await deleteDoc(docRef);
           await deleteUser(user);
+          this.user = null;
         }
       } catch (err) {
         console.error("delete error:", err.code, err.message);
@@ -101,24 +112,26 @@ export const useAuthStore = defineStore("authStore", {
         console.error("update Display Name error:", err.code, err.message);
       }
     },
-    async updateUserEmail(user, newEmail) {
+
+    async updateUserPassword(oldPassword, newPassword) {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      const credential = EmailAuthProvider.credential(user.email, oldPassword);
       try {
-        if (user) {
-          await updateEmail(user, newEmail);
-        }
-      } catch (err) {
-        console.error("update Email  error:", err.code, err.message);
+        await reauthenticateWithCredential(user, credential);
+        await updatePassword(user, newPassword);
+        console.log("✅ Password updated");
+      } catch (error) {
+        return error.code;
       }
     },
-
-    async updateUserPassword(user, newPassword) {
-      try {
-        if (user) {
-          await updatePassword(user, newPassword);
-        }
-      } catch (err) {
-        console.error("update Password  error:", err.code, err.message);
-      }
+    async logOut() {
+      const auth = getAuth();
+      const taskStore = useTaskeStore();
+      await signOut(auth);
+      taskStore.resetTasksStore();
+      this.user = null;
     },
   },
 });

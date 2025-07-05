@@ -14,8 +14,8 @@ const routes = [
     component: SignView,
   },
   {
-    name: "dashboard",
-    path: "/Dashboard",
+    name: "index",
+    path: "/index",
     component: () => import("../views/dashbord/index.vue"),
     children: [
       {

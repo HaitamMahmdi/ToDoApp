@@ -2,7 +2,7 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import InputComponent from "../InputComponent.vue";
 import { handleClickOutside } from "../../utilities/handleClickOutside";
-import { useTaskeStore } from "../../stors/TaskStore";
+import { useTaskeStore } from "../../stores/TaskStore";
 const taskStore = useTaskeStore();
 const emit = defineEmits(["taskInfoHide", "stepIsDone"]);
 const { task } = defineProps({

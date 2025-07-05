@@ -1,199 +1,145 @@
 <script setup>
-/**
- * TODO:Subscribe to Firebase Storage so users can upload their profile images.
- * ! FIX: Error whene user try create profile with existing Email
- * !FIX : Add new phase for account verifie
- * TODO: Make all the validation functions into one function or component
- */
-import { computed, ref, watch } from "vue";
-import { useAuthStore } from "../stors/AuthStore";
+import { computed, reactive, ref, watch } from "vue";
+import { useAuthStore } from "../stores/AuthStore";
+import InputComponent from "../components/InputComponent.vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
-const showPassword = ref(false);
 authStore.checkAuth();
 const isFinished = ref(false);
 
-const inPhase = ref(1);
-const isLoginMode = ref(false);
-const firstPhase = ref(null);
-const secondPhase = ref(null);
-const thirdPhase = ref(null);
-
-const emailInput = ref("");
-const emailErrorMessage = ref(null);
-const isValidEmail = ref(null);
-const validitEmail = () => {
-  const email = emailInput.value;
-  const messageEl = emailErrorMessage.value;
-  const emailRegex = /^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/;
-  if (!email) {
-    isValidEmail.value = false;
-    messageEl.innerText = "This field is required.";
-  } else if (!emailRegex.test(email)) {
-    isValidEmail.value = false;
-    messageEl.innerText = "Please enter a valid email like example@gmail.com";
-  } else {
-    isValidEmail.value = true;
-    messageEl.innerText = "Looks good!";
-  }
+const formSettings = reactive({
+  currentPhase: 1,
+  isLoginMode: false,
+  errorMessages: ``,
+});
+const inputVal = reactive({
+  email: {
+    val: "",
+    isValidVal: null,
+  },
+  password: {
+    val: "",
+    isValidVal: null,
+  },
+  firstName: {
+    val: "",
+    isValidVal: null,
+  },
+  lastName: {
+    val: "",
+    isValidVal: null,
+  },
+  displayName: {
+    val: "",
+    isValidVal: null,
+  },
+  profileImage: "s",
+});
+const errorMessages = {
+  "auth/email-already-in-use":
+    "❌ This email is already registered. Try logging in instead.",
+  "auth/invalid-email":
+    "❌ The email address is badly formatted. Please check and try again.",
+  "auth/operation-not-allowed":
+    "❌ Sign-up with email/password is currently disabled. Please try again later.",
+  "auth/weak-password":
+    "❌ Your password is too weak. It must be at least 6 characters.",
 };
+const goToNextPage = async () => {
+  try {
+    const isFirstPhaseFinished =
+      inputVal.email.isValidVal &&
+      inputVal.password.isValidVal &&
+      inputVal.firstName.isValidVal &&
+      inputVal.lastName.isValidVal;
+    const isLastPhaseFinished =
+      inputVal.displayName.isValidVal && inputVal.profileImage;
 
-const nameRegex = /^\p{L}+$/u;
-const firstNameInput = ref("");
-const fNIMessage = ref(null);
-const isValidFN = ref(null);
-
-const validitFN = () => {
-  if (!firstNameInput.value) {
-    isValidFN.value = false;
-    fNIMessage.value.innerText = `This field is required.`;
-  } else if (!nameRegex.test(firstNameInput.value)) {
-    isValidFN.value = false;
-    fNIMessage.value.innerText = `Name must contain
-     letters only.`;
-  } else {
-    isValidFN.value = true;
-    fNIMessage.value.innerText = `Looks good!`;
-  }
-};
-const lastNameInput = ref("");
-const lNIMessage = ref(null);
-const isValidLN = ref(null);
-const validitLN = () => {
-  if (!lastNameInput.value) {
-    isValidLN.value = false;
-    lNIMessage.value.innerText = `This field is required.`;
-  } else if (!nameRegex.test(lastNameInput.value)) {
-    isValidLN.value = false;
-    lNIMessage.value.innerText = `Name must contain
-     letters only.`;
-  } else {
-    isValidLN.value = true;
-    lNIMessage.value.innerText = `Looks good!`;
-  }
-};
-
-const passwordInput = ref("");
-const passwordMessage = ref(null);
-const isVaildPW = ref(null);
-const passwordRegex = /^(?=\S{8,16}$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])/;
-
-const validitPassword = () => {
-  if (!passwordInput.value) {
-    isVaildPW.value = false;
-    passwordMessage.value.innerText = `This field is required!`;
-  } else if (!passwordRegex.test(passwordInput.value)) {
-    isVaildPW.value = false;
-    passwordMessage.value.innerText = `Use 8–16 characters: uppercase, lowercase,
-     number, and symbol!`;
-  } else {
-    isVaildPW.value = true;
-    passwordMessage.value.innerText = `Looks good!`;
-  }
-};
-
-const changColor = (e) => {
-  const target = e.currentTarget;
-  const isClicked = target.dataset.clicked === "true";
-  if (!isClicked) {
-    target.classList.replace("bg-gray-300", `bg-on-surface`);
-    target.classList.replace("text-black", `text-white`);
-  } else {
-    target.classList.replace("bg-on-surface", `bg-gray-300`);
-    target.classList.replace("text-white", `text-black`);
-  }
-  target.dataset.clicked = (!isClicked).toString();
-};
-const userDisplayName = ref(``);
-const isValidDisplayName = ref(null);
-const validationInfo = ref(null);
-/*
-
-const validitDisplayName = ()=>{
-  const displayNameRegex = /^[A-Za-z]{4,8}$/
-
-  if(userDisplayName.value){
-    if(nameRegex.test(userDisplayName.value)){
-
+    if (!isFirstPhaseFinished) {
+      formSettings.errorMessages = "❌ Please fill out all fields correctly.";
+      return;
     }
-  }else{
-    isValidDisplayName.value = false
-    validationInfo.value = `This field is required`
+
+    if (formSettings.currentPhase === 3) {
+      if (!isLastPhaseFinished) {
+        formSettings.errorMessages =
+          "❌ select an image and a valid display name. ";
+        return;
+      }
+    }
+
+    if (formSettings.currentPhase < 4) {
+      formSettings.currentPhase += 1;
+    }
+
+    if (formSettings.currentPhase === 4) {
+      const isSignUp = await authStore.signUp(
+        inputVal.email.val,
+        inputVal.password.val,
+        inputVal.displayName.val,
+        inputVal.profileImage
+      );
+      if (isSignUp instanceof Error) {
+        formSettings.currentPhase = 1;
+        console.log(isSignUp.code);
+        formSettings.errorMessages = errorMessages[isSignUp.code];
+        return;
+      }
+      formSettings.currentPhase = `completed`;
+    }
+  } catch (error) {
+    formSettings.errorMessages = `🔥 Firebase error: ${error.code}`;
+    console.error("❌ Error in goToNextPage:", error.code, error.message);
   }
-}
-*/
+};
+const login = async () => {
+  const result = await authStore.signIn(
+    inputVal.email.val.trim().toLocaleLowerCase(),
+    inputVal.password.val
+  );
+  if (result instanceof Error) {
+    formSettings.errorMessages = `❌ Email or password are wrong.`;
+  }
+};
 const userImage = ref(null);
-const imageName = ref("");
 const changProfileImage = (e) => {
   const target = e.target;
   if (userImage.value) {
-    console.log(imageName.value);
-    imageName.value = target.dataset.imagename;
-    userImage.value.src = `/user_default_profile_image/${imageName.value}.jpg`;
+    inputVal.profileImage = target.dataset.imagename;
+    userImage.value.src = `/user_default_profile_image/${inputVal.profileImage}.jpg`;
   }
 };
 
-const handleSubmit = () => {
-  if (isLoginMode.value) {
-    if (isValidEmail.value && isVaildPW.value) {
-      authStore.signIn(emailInput.value, passwordInput.value);
-    } else {
-      validitEmail();
-      validitPassword();
-    }
-  } else {
-    if (
-      isValidEmail.value &&
-      isValidFN.value &&
-      isValidLN.value &&
-      isVaildPW.value
-    ) {
-      if (inPhase.value === 3) {
-        authStore.signUp(
-          emailInput.value,
-          passwordInput.value,
-          userDisplayName.value,
-          imageName.value
-        );
-        inPhase.value = 1;
-      }
-      inPhase.value += 1;
-    } else {
-      validitEmail();
-      validitPassword();
-      validitFN();
-      validitLN();
-    }
-  }
-};
 watch(user, () => {
   isFinished.value = true;
+
   setTimeout(() => {
-    router.push("/dashboard");
+    router.push("/index");
   }, 200);
 });
 </script>
 
 <template>
-  <div class="container max-sm:w-full mx-auto mt-5">
+  <div
+    :class="isFinished ? ' opacity-100 z-100' : 'opacity-0 z-0'"
+    class="absolute h-[200vh] w-full flex flex-col items-center justify-start top-[-1.2rem] pt-20 left-0 dark:bg-on-surface dark:text-on-primary bg-on-primary"
+  >
+    <h1 class="text-[clamp(3rem,5vw,8rem)] font-semibold">All Finished</h1>
     <div
-      :class="isFinished ? ' opacity-100 z-1' : 'opacity-0 z-0'"
-      class="absolute h-[100vh] transition duration-200 w-full flex flex-col items-center justify-center top-0 left-0 dark:bg-on-surface dark:text-on-primary bg-on-primary"
+      class="bg-success w-24 h-24 p-5 text-on-primary rounded-full text-center flex items-center justify-center"
     >
-      <h1 class="text-[clamp(3rem,5vw,8rem)] font-semibold">All Finished</h1>
-      <div
-        class="bg-success w-24 h-24 p-5 text-on-primary rounded-full text-center flex items-center justify-center"
-      >
-        <font-awesome-icon
-          class="text-[clamp(3rem,5vw,8rem)]"
-          :icon="['fas', 'check']"
-        />
-      </div>
+      <font-awesome-icon
+        class="text-[clamp(3rem,5vw,8rem)]"
+        :icon="['fas', 'check']"
+      />
     </div>
+  </div>
+  <div class="container max-sm:w-full mx-auto mt-5">
     <div class="w-fit mx-auto flex justify-center">
       <form
+        v-if="formSettings.currentPhase != 'completed'"
         @submit.prevent
         novalidate
         action=""
@@ -202,236 +148,103 @@ watch(user, () => {
         <h1
           class="text-textColor text-center mb-5 max-sm:text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-bold"
         >
-          {{ isLoginMode ? "signIn" : "signUp" }}
+          {{ formSettings.isLoginMode ? "signIn" : "signUp" }}
         </h1>
         <div class="min-h-[25rem] flex items-center justify-center relative">
           <div
-            v-if="inPhase === 1"
+            v-if="formSettings.currentPhase === 1"
             id="firstPhase"
             ref="firstPhase"
             class="relative left-0"
           >
-            <div class="w-full sm:w-md relative mx-auto">
-              <div class="relative">
-                <input
-                  @input="validitEmail"
-                  v-model="emailInput"
-                  autocomplete="email"
-                  required
-                  class="peer border max-sm:w-full dark:focus:bg-on-primary dark:focus:text-surface w-md pl-10 h-12 placeholder:font-bold"
-                  :class="[
-                    isValidEmail === null
-                      ? 'border-on-surface dark:border-on-primary placeholder:text-on-surface dark:placeholder:text-on-primary'
-                      : isValidEmail
-                      ? 'border-success'
-                      : 'border-error text-error placeholder:text-error',
-                  ]"
-                  id="email"
-                  :placeholder="isLoginMode ? 'Email or User Name' : 'Email'"
-                  :type="isLoginMode ? 'text' : 'Email'"
-                />
-                <font-awesome-icon
-                  :class="[
-                    isValidEmail === null
-                      ? 'text-on-primary peer-focus:text-on-surface   '
-                      : isValidEmail
-                      ? 'text-success '
-                      : 'text-error ',
-                  ]"
-                  class="absolute text-2xl left-2 top-3/6 transform -translate-y-2/4"
-                  icon="envelope"
-                />
-              </div>
-              <div
-                class="items-center"
-                :class="[
-                  isValidEmail === null
-                    ? 'hidden'
-                    : isValidEmail
-                    ? 'flex text-success'
-                    : 'flex text-error',
-                ]"
-              >
-                <font-awesome-icon v-show="isValidEmail" icon="circle-check" />
-                <font-awesome-icon
-                  v-show="!isValidEmail"
-                  icon="circle-exclamation"
-                />
-                <p
-                  class="font-bold ml-1"
-                  ref="emailErrorMessage"
-                  id="errorMassage"
-                ></p>
-              </div>
-            </div>
-
+            <div class="w-full sm:w-md relative mx-auto"></div>
+            <InputComponent
+              v-model="inputVal.email.val"
+              label="email"
+              inputType="email"
+              id="newInput"
+              name="input"
+              :isRequired="true"
+              @isvalidVal="(n) => (inputVal.email.isValidVal = n)"
+              lableStyle="text-2xl"
+              class="md:w-md mb-5"
+              cusclass="px-5 w-full py-3"
+              :helperText="true"
+              :addValidateToText="true"
+            />
+            <InputComponent
+              v-model="inputVal.password.val"
+              label="Password"
+              inputType="password"
+              id="newInput"
+              name="input"
+              :isRequired="true"
+              class="md:w-md mb-5"
+              @isvalidVal="(n) => (inputVal.password.isValidVal = n)"
+              lableStyle="text-2xl"
+              cusclass="px-5 w-full py-3"
+              :helperText="true"
+              :addValidateToText="true"
+            />
             <div
-              v-show="!isLoginMode"
+              v-show="!formSettings.isLoginMode"
               class="flex max-sm:w-full max-sm:flex-col w-md mx-auto my-5 flex-wrap justify-between"
             >
               <div class="max-w-[48%] max-sm:max-w-full">
-                <input
-                  @input="validitFN"
-                  id="firstName"
-                  v-model="firstNameInput"
-                  type="text"
-                  placeholder="First Name"
-                  class="placeholder:font-bold dark:focus:bg-on-primary dark:focus:text-surface block border pl-10 h-12 w-full"
-                  :class="[
-                    isValidFN === null
-                      ? 'border-on-surface dark:border-on-primary placeholder:text-on-surface dark:placeholder:text-on-primary'
-                      : isValidFN
-                      ? 'border-success'
-                      : 'border-error text-error placeholder:text-error',
-                  ]"
+                <InputComponent
+                  v-model="inputVal.firstName.val"
+                  label="first name"
+                  inputType="text"
+                  id="newInput"
+                  name="input"
+                  :isRequired="true"
+                  class="w-full"
+                  @isvalidVal="(n) => (inputVal.firstName.isValidVal = n)"
+                  lableStyle="text-2xl"
+                  cusclass="px-5 w-full py-3"
+                  :helperText="true"
+                  :addValidateToText="true"
                 />
-                <div
-                  class="items-center"
-                  :class="[
-                    isValidFN === null
-                      ? 'hidden'
-                      : isValidFN
-                      ? 'flex text-success'
-                      : 'flex text-error',
-                  ]"
-                >
-                  <font-awesome-icon v-show="isValidFN" icon="circle-check" />
-                  <font-awesome-icon
-                    v-show="!isValidFN"
-                    icon="circle-exclamation"
-                  />
-                  <p
-                    class="font-bold ml-1"
-                    ref="fNIMessage"
-                    id="errorMassage"
-                  ></p>
-                </div>
               </div>
               <div class="max-w-[48%] max-sm:max-w-full max-sm:mt-5">
-                <input
-                  id="lastName"
-                  v-model="lastNameInput"
-                  @input="validitLN"
-                  type="text"
-                  placeholder="Last Name"
-                  class="placeholder:font-bold block border pl-10 h-12 w-full dark:focus:bg-on-primary dark:focus:text-surface"
-                  :class="[
-                    isValidLN === null
-                      ? 'border-on-surface dark:border-on-primary placeholder:text-on-surface dark:placeholder:text-on-primary'
-                      : isValidLN
-                      ? 'border-success'
-                      : 'border-error text-error placeholder:text-error',
-                  ]"
+                <InputComponent
+                  v-model="inputVal.lastName.val"
+                  label="last name"
+                  inputType="text"
+                  id="newInput"
+                  name="input"
+                  :isRequired="true"
+                  class="w-full"
+                  @isvalidVal="(n) => (inputVal.lastName.isValidVal = n)"
+                  lableStyle="text-2xl"
+                  cusclass="px-5 w-full py-3"
+                  :helperText="true"
+                  :addValidateToText="true"
                 />
-                <div
-                  class="items-center"
-                  :class="[
-                    isValidLN === null
-                      ? 'hidden'
-                      : isValidLN
-                      ? 'flex text-success'
-                      : 'flex text-error',
-                  ]"
-                >
-                  <font-awesome-icon v-show="isValidLN" icon="circle-check" />
-                  <font-awesome-icon
-                    v-show="!isValidLN"
-                    icon="circle-exclamation"
-                  />
-                  <p
-                    class="font-bold ml-1"
-                    ref="lNIMessage"
-                    id="lastNameErrorMassage"
-                  ></p>
-                </div>
-              </div>
-            </div>
-            <div class="w-fit mx-auto max-sm:w-full">
-              <div class="relative">
-                <input
-                  autocomplete="new-password"
-                  id="password"
-                  @input="validitPassword"
-                  v-model="passwordInput"
-                  minlength="8"
-                  maxlength="16"
-                  placeholder="Password"
-                  class="peer placeholder:font-bold block border pl-10 h-12 w-md max-sm:w-full dark:focus:bg-on-primary dark:focus:text-surface"
-                  :class="[
-                    isVaildPW === null
-                      ? 'border-on-surface dark:border-on-primary placeholder:text-on-surface dark:placeholder:text-on-primary '
-                      : isVaildPW
-                      ? 'border-success'
-                      : 'border-error text-error placeholder:text-error',
-                  ]"
-                  :type="showPassword ? 'text' : 'password'"
-                />
-                <font-awesome-icon
-                  v-show="!showPassword"
-                  @click="showPassword = !showPassword"
-                  :class="[
-                    isVaildPW === null
-                      ? 'text-on-primary peer-focus:text-on-surface'
-                      : isVaildPW
-                      ? 'text-success'
-                      : 'text-error',
-                  ]"
-                  class="absolute text-2xl cursor-pointer left-2 top-3/6 transform -translate-y-2/4"
-                  icon="eye"
-                />
-                <font-awesome-icon
-                  icon="eye-slash"
-                  :class="[
-                    isVaildPW === null
-                      ? 'text-on-primary peer-focus:text-on-surface'
-                      : isVaildPW
-                      ? 'text-success'
-                      : 'text-error',
-                  ]"
-                  class="absolute text-2xl cursor-pointer left-2 top-3/6 transform -translate-y-2/4"
-                  v-show="showPassword"
-                  @click="showPassword = !showPassword"
-                />
-              </div>
-              <div
-                class="items-center"
-                :class="[
-                  isVaildPW === null
-                    ? 'hidden'
-                    : isVaildPW
-                    ? 'flex text-success'
-                    : 'flex text-error',
-                ]"
-              >
-                <font-awesome-icon v-show="isVaildPW" icon="circle-check" />
-                <font-awesome-icon
-                  v-show="!isVaildPW"
-                  icon="circle-exclamation"
-                />
-                <p
-                  class="font-bold ml-1"
-                  ref="passwordMessage"
-                  id="passwordErrorMassage"
-                ></p>
               </div>
             </div>
             <p
-              class="w-md max-sm:w-full font-semibold text-center mx-auto mt-15"
+              class="w-md max-sm:w-full font-semibold text-center text-error mx-auto"
+            >
+              {{ formSettings.errorMessages }}
+            </p>
+            <p
+              class="w-md mb-5 max-sm:w-full font-semibold text-center mx-auto mt-5"
             >
               {{
-                isLoginMode
+                formSettings.isLoginMode
                   ? "Don't have an account ?"
                   : "Already have an account ?"
               }}
               <span
-                @click="isLoginMode = !isLoginMode"
+                @click="formSettings.isLoginMode = !formSettings.isLoginMode"
                 class="text-primary cursor-pointer"
-                >{{ isLoginMode ? "SignUp" : "SignIn" }}</span
+                >{{ formSettings.isLoginMode ? "SignUp" : "SignIn" }}</span
               >
             </p>
           </div>
           <div
-            v-if="inPhase === 2"
+            v-if="formSettings.currentPhase === 2"
             id="secondPhase"
             ref="secondPhase"
             class="bg-transparent mx-auto max-w-md"
@@ -517,7 +330,12 @@ watch(user, () => {
               </p>
             </div>
           </div>
-          <div v-if="inPhase === 3" ref="thirdPhase" id="thirdPhase" class="">
+          <div
+            v-if="formSettings.currentPhase === 3"
+            ref="thirdPhase"
+            id="thirdPhase"
+            class=""
+          >
             <div class="flex flex-col items-center">
               <img
                 ref="userImage"
@@ -526,13 +344,20 @@ watch(user, () => {
                 class="w-40 h-40 mb-5 rounded-full"
               />
               <div>
-                <input
-                  type="text"
-                  v-model="userDisplayName"
-                  class="border max-sm:w-full dark:focus:bg-on-primary dark:focus:text-surface w-xs p-2.5 placeholder:font-bold"
-                  placeholder="Your Name"
+                <InputComponent
+                  v-model="inputVal.displayName.val"
+                  label="last name"
+                  inputType="text"
+                  id="newInput"
+                  name="input"
+                  :isRequired="true"
+                  class="w-full"
+                  @isvalidVal="(n) => (inputVal.displayName.isValidVal = n)"
+                  lableStyle="text-2xl"
+                  cusclass="px-5 w-full py-3"
+                  :helperText="true"
+                  :addValidateToText="true"
                 />
-                <p class="" ref="validationInfo"></p>
               </div>
               <ul class="flex flex-wrap justify-center items-center mt-5">
                 <li>
@@ -565,7 +390,7 @@ watch(user, () => {
                 <li>
                   <img
                     @click="changProfileImage"
-                    data-imageName="cat"
+                    data-imagename="cat"
                     class="w-16 h-16 rounded-full md:mt-0 m-3 cursor-pointer"
                     src="/user_default_profile_image/cat.jpg"
                     alt=""
@@ -575,7 +400,7 @@ watch(user, () => {
                   <img
                     @click="changProfileImage"
                     class="w-16 h-16 rounded-full md:mt-0 m-3 cursor-pointer"
-                    data-imageName="face"
+                    data-imagename="face"
                     src="/user_default_profile_image/face.jpg"
                     alt=""
                   />
@@ -583,66 +408,87 @@ watch(user, () => {
                 <li>
                   <img
                     @click="changProfileImage"
-                    data-imageName="woman_face"
+                    data-imagename="woman_face"
                     class="w-16 h-16 rounded-full md:mt-0 m-3 cursor-pointer"
                     src="/user_default_profile_image/woman_face.jpg"
                     alt=""
                   />
                 </li>
               </ul>
+              <p
+                class="w-md max-sm:w-full font-semibold text-center text-error mx-auto"
+              >
+                {{ formSettings.errorMessages }}
+              </p>
             </div>
           </div>
         </div>
         <button
-          v-show="isLoginMode"
-          @click="handleSubmit"
+          v-show="formSettings.isLoginMode"
+          @click="login"
           class="bg-on-surface cursor-pointer font-semibold text-on-primary text-2xl block w-96 mx-auto px-3 py-4"
           id="sbmitBotton"
         >
           Submit
         </button>
         <div
-          v-show="!isLoginMode"
-          class="w-md max-sm:w-full h-2/5 pt-5 mx-auto flex flex-col justify-between"
+          v-show="!formSettings.isLoginMode"
+          class="w-md max-sm:w-full pt-5 mx-auto flex flex-col justify-between"
         >
           <div class="flex flex-row-reverse justify-between">
             <button
-              @click="handleSubmit"
-              class="flex mb-5 items-center w-24 justify-center rounded-2xl bg-on-surface p-2 cursor-pointer"
+              @click="goToNextPage"
+              class="flex items-center w-24 justify-center rounded-2xl bg-on-surface p-2 cursor-pointer"
             >
               <p class="text-on-primary font-semibold">
-                {{ inPhase <= 2 ? "Next" : "Submit" }}
+                {{ formSettings.currentPhase <= 2 ? "Next" : "Submit" }}
               </p>
               <font-awesome-icon
-                v-if="inPhase <= 2"
+                v-if="formSettings.currentPhase <= 2"
                 class="text-primary ml-1 text-2xl"
                 icon="caret-right"
               />
             </button>
             <button
-              @click="inPhase !== 1 ? (inPhase -= 1) : ''"
-              class="bg-on-secondary mb-5 items-center min-w-24 text-black p-2 text-center cursor-pointer transition hover:text-white hover:bg-[#333] rounded-2xl"
+              @click="
+                formSettings.currentPhase !== 1
+                  ? (formSettings.currentPhase -= 1)
+                  : ''
+              "
+              class="bg-on-secondary items-center min-w-24 text-black p-2 text-center cursor-pointer transition hover:text-white hover:bg-[#333] rounded-2xl"
             >
               <p class="">Go Back</p>
             </button>
           </div>
           <div class="flex items-center justify-center">
             <div
-              :class="[inPhase === 1 ? 'bg-primary' : 'bg-on-surface']"
+              :class="[
+                formSettings.currentPhase === 1
+                  ? 'bg-primary'
+                  : 'bg-on-surface',
+              ]"
               class="flex justify-center transition duration-75 items-center w-10 h-10 text-on-primary rounded-full font-bold"
             >
               1
             </div>
             <div class="w-5 bg-on-surface h-0.5"></div>
             <div
-              :class="[inPhase === 2 ? 'bg-primary' : 'bg-on-surface']"
+              :class="[
+                formSettings.currentPhase === 2
+                  ? 'bg-primary'
+                  : 'bg-on-surface',
+              ]"
               class="flex justify-center transition duration-75 items-center w-10 h-10 text-on-primary rounded-full font-bold"
             >
               2
             </div>
             <div class="w-5 bg-on-surface h-0.5"></div>
             <div
-              :class="[inPhase === 3 ? 'bg-primary' : 'bg-on-surface']"
+              :class="[
+                formSettings.currentPhase === 3
+                  ? 'bg-primary'
+                  : 'bg-on-surface',
+              ]"
               class="flex justify-center transition duration-75 items-center w-10 h-10 text-on-primary rounded-full font-bold"
             >
               3
