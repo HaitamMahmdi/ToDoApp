@@ -15,7 +15,7 @@ const gender = ref("Man");
 const isvalidPassword = ref(null);
 const oldPassword = ref("");
 const newPassword = ref("");
-const errorMessage = ref("");
+const passwordIsupdated = ref(null);
 const yourGender = (e) => {
   const target = e.target;
   gender.value = target.innerText;
@@ -48,15 +48,18 @@ const submitNewImage = async () => {
   await authStore.updateUserImage(user.value, newprofileImage.value);
   showImagesList.value = false;
 };
-
+let resulte;
 const submitNewPassword = async () => {
   if (isvalidPassword.value) {
-    const resulte = await authStore.updateUserPassword(
+    resulte = await authStore.updateUserPassword(
       oldPassword.value,
       newPassword.value
     );
-    if (resulte === "auth/invalid-credential") {
-      errorMessage.value = `Password is not correct.`;
+
+    if (resulte.startsWith("✅")) {
+      passwordIsupdated.value = true;
+    } else {
+      passwordIsupdated.value = false;
     }
   }
 };
@@ -82,7 +85,7 @@ const submitNewPassword = async () => {
             </div>
             <ul
               v-if="showImagesList"
-              class="flex top-full w-full absolute dark:bg-on-surface flex-wrap justify-center p-4 items-center mt-5"
+              class="flex top-full w-full absolute bg-light-surface dark:bg-on-surface flex-wrap justify-center p-4 items-center mt-5"
             >
               <li v-for="imageName in imageNames">
                 <img
@@ -108,7 +111,7 @@ const submitNewPassword = async () => {
                 </button>
               </li>
             </ul>
-            <p class="dark:text-on-primary ml-5">
+            <p class="dark:text-on-primary font-semibold text-3xl ml-5">
               {{ user ? user.displayName : "none" }}
             </p>
             <input
@@ -194,25 +197,32 @@ const submitNewPassword = async () => {
                   :addValidateToText="true"
                 />
               </li>
-
+              <p
+                v-if="resulte"
+                :class="[passwordIsupdated ? 'text-success' : 'text-error']"
+                class="font-bold text-3xl text-center"
+              >
+                ------{{ resulte }}------
+              </p>
               <li class="flex mt-5 justify-between items-center">
                 <p class="p-5">Add a Phone Number</p>
                 <input
-                  class="bg-secondary py-2 px-3 md:w-[60%]"
+                  class="dark:bg-secondary bg-on-primary py-2 px-3 md:w-[60%]"
                   type="number"
                 />
               </li>
               <li>
                 <button
                   @click="submitNewPassword"
-                  class="bg-primary cursor-pointer mt-5 px-4 py-3 rounded-2xl"
+                  class="bg-primary font-semibold cursor-pointer mt-5 px-4 py-3 rounded-2xl"
                 >
                   Submit changes
                 </button>
               </li>
+
               <li class="relative border p-4 mt-20 border-error">
                 <h3
-                  class="text-3xl top-[-20%] dark:bg-surface px-4 absolute font-semibold text-error"
+                  class="text-3xl top-[-20%] dark:bg-surface bg-light-surface px-4 absolute font-semibold text-error"
                 >
                   Danger zone
                 </h3>

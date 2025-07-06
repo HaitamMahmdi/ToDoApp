@@ -5,9 +5,12 @@ export async function getUserData() {
   await authStore.checkAuth(); // 🔁 wait for Firebase to finish
 
   const user = authStore.user;
-  const db = getFirestore();
-  const docRef = doc(db, "users", `user-${user.uid}`);
-  const snapshot = await getDoc(docRef);
-  const data = snapshot.data();
-  return { db, user, docRef, data };
+  if (user) {
+    const db = getFirestore();
+    const docRef = doc(db, "users", `user-${user.uid}`);
+    const snapshot = await getDoc(docRef);
+    const data = snapshot.data();
+    return { db, user, docRef, data };
+  }
+  return { user };
 }

@@ -3,16 +3,12 @@ import { computed, onMounted, ref, toRaw } from "vue";
 import TaskCom from "/src/components/tasks/TaskCom.vue";
 import TaskDetailsCom from "../../components/tasks/TaskDetailsCom.vue";
 import { useTaskeStore } from "../../stores/TaskStore";
-import { useAuthStore } from "../../stores/AuthStore";
-
-const authStore = useAuthStore();
-authStore.checkAuth();
 
 const taskStore = useTaskeStore();
 const tasks = computed(() => taskStore.tasks);
 const todayTasks = computed(() => taskStore.getTodayTasks);
 const showInfoOf = ref(null);
-
+const showInfoTask = ref(null);
 const startTask = async ({ id, status }) => {
   if (status === "not started" || status === "pause") {
     await taskStore.updateTask(id, "status", "In Progress");
@@ -29,37 +25,41 @@ const stopTask = async ({ id, status }) => {
 const markAsDone = async ({ id }) => {
   await taskStore.updateTask(id, "status", "done");
 };
-const stepDone = async (stepId, id) => {
+const stepDone = async (stepId, id, status) => {
   const task = tasks.value.find((task) => task.id === id);
   const newRate = task.completionRate + 100 / task.originalStepsCount;
   const newsteps = task.steps.filter((step) => step.objID !== stepId);
   console.log(task.completionRate);
   await taskStore.updateTask(id, "steps", newsteps);
-
+  if (status != "In Progress") {
+    await taskStore.updateTask(id, "status", "In Progress");
+  }
   await taskStore.updateTask(id, "completionRate", newRate);
   if (newRate >= 100) {
     await taskStore.updateTask(id, "status", "done");
   }
+
   await taskStore.updateTask(id, "updatedAt", new Date().toISOString());
 };
-let position = ``;
+const taskIsFailed = async (id) => {
+  await taskStore.updateTask(id, "status", "failed");
+};
 </script>
 <template>
   <div
-    v-if="tasks.length"
+    v-if="tasks?.length"
     class="container md:w-[calc(100%-256px)] min-h-[100vh] flex flex-wrap gap-1.5 justify-center md:p-4 relative mx-auto"
   >
-    <div class="w-full flex flex-wrap">
+    <div v-if="todayTasks?.length" class="w-full flex h-fit flex-wrap">
       <h2
-        class="text-[clamp(2.5rem,5vw,3rem)] mb-5 ml-5 font-bold w-full dark:text-on-primary"
+        class="text-[clamp(2.5rem,5vw,3rem)] h-fit mb-10 ml-5 font-bold w-full dark:text-on-primary"
       >
         tody tasks
       </h2>
       <TaskCom
         @show-info="
-          (n, y) => {
+          (n) => {
             showInfoOf = n;
-            position = y;
           }
         "
         class="lg:w-lg"
@@ -69,6 +69,7 @@ let position = ``;
         @startTask="startTask"
         @removeTask="removeTask"
         @stopTask="stopTask"
+        @taskIsFailed="taskIsFailed"
         @markAsDone="markAsDone"
       />
       <TaskDetailsCom
@@ -76,21 +77,22 @@ let position = ``;
         @taskInfoHide="showInfoOf = null"
         @stepIsDone="stepDone"
         :task="showInfoOf"
-        :style="{ top: `${position}px` }"
       />
     </div>
 
-    <div class="w-full flex flex-wrap">
+    <div
+      v-if="tasks.length !== todayTasks?.length"
+      class="w-full flex flex-wrap h-fit"
+    >
       <h2
-        class="text-[clamp(2.5rem,5vw,3rem)] mb-5 ml-5 font-bold w-full dark:text-on-primary"
+        class="text-[clamp(2.5rem,5vw,3rem)] h-fit mb-10 ml-5 font-bold w-full dark:text-on-primary"
       >
-        tasks for the week
+        coming tasks
       </h2>
       <TaskCom
         @show-info="
-          (n, y) => {
-            showInfoOf = n;
-            position = y;
+          (n) => {
+            showInfoTask = n;
           }
         "
         class="lg:w-lg"
@@ -102,12 +104,13 @@ let position = ``;
         @removeTask="removeTask"
         @stopTask="stopTask"
         @markAsDone="markAsDone"
+        @taskIsFailed="taskIsFailed"
       />
       <TaskDetailsCom
-        v-if="showInfoOf"
-        @taskInfoHide="showInfoOf = null"
+        v-if="showInfoTask"
+        @taskInfoHide="showInfoTask = null"
         @stepIsDone="stepDone"
-        :task="showInfoOf"
+        :task="showInfoTask"
       />
     </div>
   </div>
@@ -116,7 +119,9 @@ let position = ``;
     class="container md:w-[calc(100%-256px)] min-h-[100vh] flex flex-wrap gap-1.5 justify-center md:p-4 relative mx-auto"
   >
     <div class="h-full flex justify-center items-center">
-      <h1 class="dark:text-on-primary font-bold text-[clamp(2rem,5vw,7rem)]">
+      <h1
+        class="dark:text-on-primary text-light-primary font-bold text-[clamp(2rem,5vw,7rem)]"
+      >
         You have no tasks
       </h1>
     </div>

@@ -7,26 +7,33 @@
  */
 import { computed, ref, watch } from "vue";
 import { useAuthStore } from "../../stores/AuthStore";
-import { RouterLink, RouterView, useRouter } from "vue-router";
+import { RouterView, useRouter } from "vue-router";
+import { useThemeStore } from "../../stores/ThemeStore";
+const themeStore = useThemeStore();
+const currentTheme = computed(() => themeStore.theme);
 const router = useRouter();
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
-authStore.checkAuth();
+
 const isAsideOpen = ref(true);
 const asideToggler = () => {
   isAsideOpen.value = !isAsideOpen.value;
 };
+
 const logOutUser = async () => {
   await authStore.logOut();
 };
-if (!user.value) {
-  router.push("/");
-}
-watch(user.value, () => {
-  if (!user.value) {
-    router.push("/");
-  }
-});
+
+// ✅ Watch for user logout and redirect
+watch(
+  () => authStore.user,
+  (newUser) => {
+    if (!newUser) {
+      router.push("/");
+    }
+  },
+  { immediate: true }
+);
 </script>
 <template>
   <section class="flex flex-wrap min-h-[100vh] pt-20 md:pt-0">
@@ -40,7 +47,7 @@ watch(user.value, () => {
     <section
       v-show="isAsideOpen"
       id="aside"
-      class="md:w-3xs w-full flex flex-col md:!flex fixed md:relative left-0 z-50 top-0 dark:bg-section text-on-primary"
+      class="md:w-3xs bg-light-primary w-full flex flex-col md:!flex fixed md:relative left-0 z-50 top-0 dark:bg-section text-on-primary"
     >
       <div class="flex flex-col mb-5 pt-5 items-center">
         <div id="userImageAndName" class="">
@@ -63,16 +70,16 @@ watch(user.value, () => {
         <ul id="links" class="text-tiny gap-4">
           <li class="w-full">
             <RouterLink
-              class="flex items-center px-5 py-4 hover:bg-on-surface"
-              to="/AddTask"
+              class="flex items-center px-5 py-4 dark:hover:bg-on-surface hover:bg-light-secondary"
+              :to="{ name: 'addTask' }"
               ><font-awesome-icon icon="plus" />
               <p class="ml-2">Add task</p></RouterLink
             >
           </li>
           <li class="w-full">
             <RouterLink
-              class="flex items-center px-5 py-4 hover:bg-on-surface"
-              to="/Tasks"
+              class="flex items-center px-5 py-4 dark:hover:bg-on-surface hover:bg-light-secondary"
+              :to="{ name: 'tasks' }"
               ><font-awesome-icon icon="list" />
               <p class="ml-2">Tasks</p></RouterLink
             >
@@ -80,17 +87,8 @@ watch(user.value, () => {
 
           <li class="w-full">
             <RouterLink
-              class="flex items-center px-5 py-4 hover:bg-on-surface"
-              to=""
-            >
-              <font-awesome-icon icon="folder-open" />
-              <p class="ml-2">Categories</p>
-            </RouterLink>
-          </li>
-          <li class="w-full">
-            <RouterLink
-              class="flex items-center px-5 py-4 hover:bg-on-surface"
-              to="/settings"
+              class="flex items-center px-5 py-4 dark:hover:bg-on-surface hover:bg-light-secondary"
+              :to="{ name: 'settings' }"
             >
               <font-awesome-icon icon="gear" />
               <p class="ml-2">Settings</p>
@@ -98,19 +96,35 @@ watch(user.value, () => {
           </li>
           <li class="w-full">
             <RouterLink
-              class="flex items-center px-5 py-4 hover:bg-on-surface"
-              to=""
+              class="flex items-center px-5 py-4 dark:hover:bg-on-surface hover:bg-light-secondary"
+              :to="{ name: `faq` }"
+              target="_blank"
             >
               <font-awesome-icon icon="circle-info" />
-              <p class="ml-2">help</p>
+              <p class="ml-2">FAQ</p>
             </RouterLink>
+          </li>
+          <li class="w-full border-y mt-20">
+            <button
+              @click="themeStore.toggleTheme"
+              class="flex w-full cursor-pointer items-center px-5 py-4 dark:hover:bg-on-surface hover:bg-light-secondary"
+            >
+              <p v-if="currentTheme === 'dark'" class="flex items-center">
+                <font-awesome-icon icon="moon" />
+                <span class="ml-2">Dark theme</span>
+              </p>
+              <p v-else="currentTheme === `light`">
+                <font-awesome-icon icon="sun" />
+                <span class="ml-2">Light theme</span>
+              </p>
+            </button>
           </li>
         </ul>
       </div>
       <div class="mb-20">
         <button
           @click="authStore.logOut"
-          class="flex items-center w-full cursor-pointer px-5 py-4 hover:bg-on-surface"
+          class="flex items-center w-full cursor-pointer px-5 py-4 dark:hover:bg-on-surface hover:bg-light-secondary"
         >
           <font-awesome-icon icon="arrow-right-from-bracket" />
           <p class="ml-2">Logout</p>

@@ -75,6 +75,7 @@ const goToNextPage = async () => {
 
     if (formSettings.currentPhase < 4) {
       formSettings.currentPhase += 1;
+      formSettings.errorMessages = "";
     }
 
     if (formSettings.currentPhase === 4) {
@@ -126,8 +127,8 @@ watch(user, () => {
 
 <template>
   <div
-    :class="isFinished ? ' opacity-100 z-100' : 'opacity-0 z-0'"
-    class="absolute h-[200vh] w-full flex flex-col items-center justify-start top-[-1.2rem] pt-20 left-0 dark:bg-on-surface dark:text-on-primary bg-on-primary"
+    :class="isFinished ? ' opacity-100 z-100 h-[200vh]' : 'opacity-0 z-0'"
+    class="absolute w-full bg-light-primary flex flex-col items-center justify-start top-[-1.2rem] pt-20 left-0 dark:bg-on-surface dark:text-on-primary"
   >
     <h1 class="text-[clamp(3rem,5vw,8rem)] font-semibold">All Finished</h1>
     <div
@@ -144,9 +145,10 @@ watch(user, () => {
       <form
         v-if="formSettings.currentPhase != 'completed'"
         @submit.prevent
+        @keydown.enter.prevent
         novalidate
         action=""
-        class="bg-on-primary dark:text-white justify-between dark:bg-surface relative overflow-hidden flex max-sm:w-full p-4 sm:w-fit md:min-w-xl flex-col"
+        class="dark:text-white justify-between dark:bg-surface relative overflow-hidden flex max-sm:w-full p-4 sm:w-fit md:min-w-xl flex-col"
       >
         <h1
           class="text-textColor text-center mb-5 max-sm:text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-bold"
@@ -429,7 +431,7 @@ watch(user, () => {
         <button
           v-show="formSettings.isLoginMode"
           @click="login"
-          class="bg-on-surface cursor-pointer font-semibold text-on-primary text-2xl block w-96 mx-auto px-3 py-4"
+          class="dark:bg-on-surface bg-primary cursor-pointer font-semibold text-on-primary text-2xl block w-96 mx-auto px-3 py-4"
           id="sbmitBotton"
         >
           Submit

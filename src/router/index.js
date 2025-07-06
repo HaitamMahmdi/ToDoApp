@@ -19,21 +19,26 @@ const routes = [
     component: () => import("../views/dashbord/index.vue"),
     children: [
       {
-        path: "/settings",
-        name: "Settings",
+        path: "settings",
+        name: "settings",
         component: () => import("../views/dashbord/SettingsView.vue"),
       },
       {
-        path: "/AddTask",
-        name: "AddTask",
+        path: "addTask",
+        name: "addTask",
         component: () => import("../views/dashbord/AddTaskView.vue"),
       },
       {
-        path: "/Tasks",
-        name: "Tasks",
+        path: "tasks",
+        name: "tasks",
         component: () => import("../views/dashbord/TasksView.vue"),
       },
     ],
+  },
+  {
+    name: `faq`,
+    path: `/faq`,
+    component: () => import("@/views/FAQ.vue"),
   },
 ];
 

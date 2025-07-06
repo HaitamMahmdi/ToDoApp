@@ -102,7 +102,7 @@ const validate = () => {
         :readonly="inputReadonly"
         :class="[
           isvalid === null
-            ? '   border-on-surface text-on-primary focus:text-on-surface  placeholder:text-[#dddd]'
+            ? '   border-on-surface dark:text-on-primary dark:focus:text-on-surface  placeholder:text-[#dddd]'
             : isvalid
             ? 'border-success   text-success  '
             : 'border-error text-error  placeholder:text-error',

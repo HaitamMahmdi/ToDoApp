@@ -1,11 +1,11 @@
 <script></script>
 <template>
-  <footer class="bg-on-surface w-full pt-10">
+  <footer class="dark:bg-on-surface bg-light-secondary w-full pt-10">
     <div class="container p-4 mx-auto">
       <ul>
         <li>
           <img src="../assets/Component 1.png" width="64px" alt="" />
-          <p class="text-on-primary md:w-md my-5 text-[18px]">
+          <p class="dark:text-on-primary md:w-md my-5 text-[18px]">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius,
             dolorem quod nesciunt sapiente perferendis a nulla minima
             repudiandae, placeat,
@@ -39,7 +39,7 @@
         </li>
       </ul>
     </div>
-    <div class="bg-primary w-full py-2">
+    <div class="dark:bg-primary bg-on-surface w-full py-2">
       <div class="container mx-auto text-center text-on-primary font-bold">
         <p>
           Made with <font-awesome-icon class="text-red-500" icon="heart" /> by

@@ -117,13 +117,34 @@ export const useAuthStore = defineStore("authStore", {
       const auth = getAuth();
       const user = auth.currentUser;
 
+      if (!user || !user.email) {
+        return "⚠️ No user is signed in.";
+      }
+
       const credential = EmailAuthProvider.credential(user.email, oldPassword);
+
       try {
+        // First: reauthenticate
         await reauthenticateWithCredential(user, credential);
+
+        // Second: update password
         await updatePassword(user, newPassword);
-        console.log("✅ Password updated");
+        return "✅ Password updated successfully.";
       } catch (error) {
-        return error.code;
+        switch (error.code) {
+          case "auth/wrong-password":
+            return "❌ Old password is incorrect.";
+          case "auth/invalid-credential":
+            return "❌  Please check your old password.";
+          case "auth/too-many-requests":
+            return "❌ Too many attempts. Try again later.";
+          case "auth/weak-password":
+            return "❌ New password is too weak.";
+          case "auth/requires-recent-login":
+            return "❌ Please log in again to update your password.";
+          default:
+            return `❌ Something went wrong: ${error.message}`;
+        }
       }
     },
     async logOut() {

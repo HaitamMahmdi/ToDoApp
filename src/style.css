@@ -8,11 +8,15 @@ paused
 @custom-variant dark (&:where(.dark, .dark *));
 @theme {
   --text-tiny: 1.2rem;
-  /* main colors*/
-  --color-primary: #00c6d7;
+  /* light theme colors*/
+  --color-light-primary: #3674b5;
+  --color-light-secondary: #578fca;
+  --color-light-hover: #a1e3f9;
+  --color-light-surface: #d1f8ef;
   /* Dark theme colors*/
   --color-surface: #222831;
   --color-on-surface: #1e1e1e;
+  --color-primary: #00c6d7;
   --color-on-primary: #ffffff;
   --color-secondary: #393e46;
   --color-on-secondary: #eeeeee;
@@ -68,5 +72,6 @@ body {
   text-transform: capitalize !important;
 }
 html.light body {
-  background-color: white;
+  background-color: var(--color-light-surface);
+  color: var(--color-on-surface);
 }

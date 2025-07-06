@@ -17,16 +17,16 @@ const {
   steps,
   category,
   status,
-  image,
   addAt,
   id,
-  completionRate,
+  categoryColor,
 } = task ?? {};
 const taskDetails = ref(null);
 
 let cleanTaskDetails;
 onMounted(async () => {
   cleanTaskDetails = handleClickOutside(taskDetails, () => {
+    console.log(`from task details`);
     emit("taskInfoHide");
   });
 });
@@ -36,28 +36,31 @@ onBeforeUnmount(() => {
 const stepDone = async (e) => {
   const stepId = e.currentTarget.id;
   e.currentTarget.setAttribute("style", "display: none !important;");
-  emit("stepIsDone", stepId, id);
+  emit("stepIsDone", stepId, id, status);
 };
-// class="w-full md:w-3/6 md:left-3/6 md:transform md:-translate-x-3/6 dark:text-on-primary h-fit absolute p-5 pt-0 left-0 dark:bg-secondary"
 </script>
 
 <template>
   <div
     ref="taskDetails"
     v-bind="$attrs"
-    class="w-full md:w-md top-0 dark:text-on-primary h-full overflow-y-scroll fixed z-50 p-5 pt-0 right-0 dark:bg-secondary"
+    class="w-full md:w-md top-0 text-on-primary bg-light-secondary border-l border-on-surface h-full overflow-y-scroll fixed z-50 p-5 pt-0 right-0 dark:bg-secondary"
   >
     <div class="w-full my-5">
-      <h2 class="text-3xl font-semibold">#{{ category }}</h2>
+      <h2
+        :style="{ color: categoryColor }"
+        class="text-3xl flex justify-between items-center font-semibold"
+      >
+        #{{ category }}
+        <span class="text-[1rem] text-on-primary"> {{ addAt }}</span>
+      </h2>
     </div>
     <form action="" @submit.prevent>
-      <div
-        class="flex flex-wrap max-[1231px]:justify-center max-[1231px]:flex-col-reverse min-[1231px]:justify-between"
-      >
+      <div class="">
         <div>
           <InputComponent
             inputType="text"
-            :id="taskName.trim()"
+            :id="taskName?.trim()"
             name=""
             label="task Name"
             :helperText="true"
@@ -65,8 +68,8 @@ const stepDone = async (e) => {
             :addValidateToText="true"
             isRequired=""
             lableStyle="text-tiny"
-            class="mb-5"
-            cusclass=" w-full  p-4 "
+            class="mb-5 w-full"
+            cusclass=" w-full   p-4 "
             :inputReadonly="true"
           />
 
@@ -88,7 +91,7 @@ const stepDone = async (e) => {
           <InputComponent
             v-if="deadline"
             inputType="text"
-            :id="`${deadline.trim()}`"
+            :id="`${deadline?.trim()}`"
             name="deadline"
             label="deadline"
             :helperText="true"
@@ -101,7 +104,7 @@ const stepDone = async (e) => {
             :inputReadonly="true"
           />
         </div>
-        <div class="w-3/6 h-96 p-5 max-[1231px]:w-full">
+        <div class="h-96 p-5 w-full">
           <img src="../../assets/taskImage.jpg" class="w-full h-full" alt="" />
         </div>
       </div>
@@ -110,7 +113,7 @@ const stepDone = async (e) => {
         <textarea
           :placeholder="description"
           readonly
-          class="bg-on-surface mt-4 font-semibold text-tiny h-fit p-5 lg:p-10 w-full"
+          class="dark:bg-on-surface mt-4 font-semibold text-tiny h-fit p-5 lg:p-10 w-full"
           name="description"
           id="description"
         ></textarea>
@@ -142,19 +145,19 @@ const stepDone = async (e) => {
         </ul>
       </div>
       <ul v-if="status !== 'done'">
-        <li>
-          <h3 v-if="steps[0]" class="text-tiny mt-10 mb-2 font-semibold">
-            steps
-          </h3>
-          <ul v-if="steps[0]" class="ml-5">
+        <li v-if="steps.length">
+          <h3 v-if="steps" class="text-tiny mt-10 mb-2 font-semibold">steps</h3>
+          <ul class="ml-5">
             <li
               v-for="(step, index) in steps"
               :key="step.id"
               :id="step.objID"
               :stepid="step.id"
               @click="stepDone"
-              :class="[index + 1 === steps.length ? 'border-y' : 'border-t']"
-              class="flex py-5 px-3 transition cursor-pointer items-center border-section duration-100 hover:bg-on-surface w-full"
+              :class="[
+                index + 1 === steps.length ? 'dark:border-y' : 'dark:border-t',
+              ]"
+              class="flex py-5 px-3 transition cursor-pointer items-center dark:border-section duration-100 dark:hover:bg-on-surface hover:border-y w-full"
             >
               <span class="w-3.5 h-3.5 block border rounded-full"></span>
 

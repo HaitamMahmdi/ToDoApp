@@ -15,9 +15,10 @@ const user = computed(() => authStore.user);
 
 watch(
   () => authStore.user,
-  (user) => {
+  async (user) => {
     if (user) {
       taskStore.startRealtimeSync();
+      await themeStore.getTheme();
     }
   },
   { immediate: true }
@@ -27,7 +28,9 @@ watch(
 <template>
   <header
     v-if="!user"
-    :class="[themeStore.theme === 'light' ? 'bg-secondary' : 'bg-on-surface']"
+    :class="[
+      themeStore.theme === 'light' ? 'bg-light-secondary' : 'bg-on-surface',
+    ]"
     class="w-full p-4"
   >
     <div class="container mx-auto flex justify-between items-center">
@@ -38,9 +41,6 @@ watch(
       </div>
       <div class="flex items-center">
         <ul v-if="route.name !== 'SignIn'" class="flex font-semibold">
-          <li class="mr-5 text-on-primary">
-            <RouterLink to="/SignView">Log in</RouterLink>
-          </li>
           <li class="text-primary">
             <RouterLink to="/SignView">SignUp</RouterLink>
           </li>
@@ -61,7 +61,7 @@ watch(
     </div>
   </header>
 
-  <main class="relative">
+  <main class="relative min-h-[100vh]">
     <router-view />
   </main>
   <FooterCom />

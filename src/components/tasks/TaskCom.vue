@@ -7,16 +7,16 @@ const emit = defineEmits([
   "stopTask",
   "markAsDone",
   "show-info",
+  "taskIsFailed",
 ]);
 const { taskobj } = defineProps({
   taskobj: Object,
 });
 
 const showIfo = (e) => {
-  const elementY = e.currentTarget.getBoundingClientRect().top + window.scrollY;
-  emit("show-info", taskobj, elementY);
+  emit("show-info", taskobj);
 };
-const status = taskobj.status;
+let status = taskobj.status;
 const id = taskobj.id;
 const startTask = () => {
   emit("startTask", { id, status });
@@ -33,6 +33,12 @@ const removeTask = () => {
 const showOptions = ref(false);
 const buttonShowOptions = ref(null);
 let cleanheandler;
+
+if (+taskobj.inProgressAt.split("-")[2] > +taskobj.deadline.split("-")[2]) {
+  taskobj.status = `failed`;
+  emit("taskIsFailed", taskobj.id);
+}
+
 onMounted(() => {
   cleanheandler = handleClickOutside(buttonShowOptions, () => {
     showOptions.value = false;
@@ -41,6 +47,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   cleanheandler?.();
 });
+
 const showOptionOnClick = (e) => {
   if (e.currentTarget.id === `optionToggle`) return (showOptions.value = true);
 };
@@ -55,7 +62,6 @@ const isColorCloseToWhite = (hexColor, threshold = 240) => {
   const b = parseInt(hexColor.slice(4, 6), 16);
 
   const isClose = r > threshold && g > threshold && b > threshold;
-  console.log(`Color RGB(${r}, ${g}, ${b}) is close to white:`, isClose);
   return isClose;
 };
 
@@ -63,20 +69,21 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
 </script>
 <template>
   <div
-    @click="show"
     :id="`taskCard-${id}`"
     v-bind="$attrs"
-    class="dark:bg-on-surface h-fit max-sm:p-5 flex rounded-t-2xl mx-4 flex-wrap dark:text-on-primary justify-between mb-5 md:min-w-96"
+    class="dark:bg-on-surface text-light-surface bg-light-secondary h-fit max-sm:p-5 flex mx-4 flex-wrap dark:text-on-primary justify-between mb-5 md:min-w-96"
   >
-    <div class="py-4 px-1 grow">
+    <div class="py-1 px-1 flex flex-col justify-center grow">
       <div class="flex items-center flex-wrap">
         <div
           :class="[
             taskobj.status === 'In Progress' || taskobj.status === 'done'
-              ? 'dark:bg-Clickable  '
-              : 'dark:bg-on-primary',
+              ? 'bg-Clickable  '
+              : taskobj.status === 'failed'
+              ? 'bg-error'
+              : 'bg-on-primary ',
           ]"
-          class="flex justify-center items-center p-1 w-[2rem] h-[2rem] rounded-full text-on-surface"
+          class="flex justify-center items-center p-1 w-[2rem] h-[2rem] rounded-full dark:text-on-surface"
         >
           <font-awesome-icon
             v-if="taskobj.status === 'In Progress'"
@@ -88,13 +95,23 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
             icon="rotate"
           />
           <font-awesome-icon
-            v-if="taskobj.status != 'In Progress' && taskobj.status != 'done'"
+            v-if="
+              taskobj.status != 'In Progress' &&
+              taskobj.status != 'done' &&
+              taskobj.status != 'failed'
+            "
+            class="text-light-secondary dark:text-on-surface"
             icon="hourglass-start"
           />
           <font-awesome-icon
             v-if="taskobj.status === 'done'"
             icon="check"
             class="text-on-primary"
+          />
+          <font-awesome-icon
+            class="text-on-primary"
+            v-if="taskobj.status === 'failed'"
+            icon="xmark"
           />
         </div>
         <h2
@@ -139,7 +156,9 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
             <li
               @click="startTask"
               v-if="
-                taskobj.status !== 'done' && taskobj.status !== 'In Progress'
+                taskobj.status !== 'done' &&
+                taskobj.status !== 'In Progress ' &&
+                taskobj.status != 'failed'
               "
               class="flex items-center cursor-pointer py-2 px-4 hover:bg-primary"
             >
@@ -151,7 +170,8 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
               v-if="
                 taskobj.status !== 'done' &&
                 taskobj.status !== 'pause' &&
-                taskobj.status !== 'not started'
+                taskobj.status !== 'not started' &&
+                taskobj.status != 'failed'
               "
               class="flex items-center cursor-pointer py-2 px-4 hover:bg-primary"
             >
@@ -167,7 +187,7 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
             </li>
             <li
               @click="markAsDone"
-              v-if="taskobj.status !== 'done'"
+              v-if="taskobj.status !== 'done' && taskobj.status != 'failed'"
               class="flex items-center cursor-pointer py-2 px-4 hover:bg-primary"
             >
               <font-awesome-icon icon="circle-check" />

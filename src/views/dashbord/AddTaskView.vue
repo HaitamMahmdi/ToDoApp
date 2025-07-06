@@ -104,7 +104,7 @@ const minDate = computed(() => {
           </label>
           <input
             v-model="inProgressAt"
-            class="pl-2 dark:focus:bg-on-primary mt-2 bg-on-surface text-tiny px-5 py-3 w-full dark:focus:text-on-surface"
+            class="pl-2 focus:bg-on-primary mt-2 dark:bg-on-surface border border-on-surface text-tiny px-5 py-3 w-full dark:focus:text-on-surface"
             type="date"
             :min="dateToday"
             max="2026-12-12"
@@ -117,7 +117,7 @@ const minDate = computed(() => {
             >to be finished at:</label
           >
           <input
-            class="pl-2 dark:focus:bg-on-primary mt-2 bg-on-surface text-tiny px-5 py-3 w-full dark:focus:text-on-surface"
+            class="pl-2 focus:bg-on-primary mt-2 dark:bg-on-surface border border-on-surface text-tiny px-5 py-3 w-full dark:focus:text-on-surface"
             type="date"
             v-model="deadline"
             :min="minDate"
@@ -133,7 +133,7 @@ const minDate = computed(() => {
           >
           <textarea
             v-model="taskDescription"
-            class="bg-on-surface mt-4 font-semibold text-tiny dark:focus:bg-on-primary rounded-3xl h-96 dark:focus:text-on-surface p-5 lg:p-10 w-full"
+            class="dark:bg-on-surface focus:bg-on-primary border border-on-surface mt-4 font-semibold text-tiny dark:focus:bg-on-primary rounded-3xl h-96 dark:focus:text-on-surface p-5 lg:p-10 w-full"
             name="Description"
             id="Description"
           ></textarea>
@@ -141,10 +141,12 @@ const minDate = computed(() => {
       </div>
       <div class="grow lg:px-10">
         <div
-          class="w-full bg-on-surface p-10 flex flex-col justify-center items-center mx-auto"
+          class="w-full dark:bg-on-surface bg-light-hover p-10 flex flex-col justify-center items-center mx-auto"
         >
           <img class="" src="/src/assets/Add Image.png" alt="" />
-          <p>chose file from your stock</p>
+          <p class="dark:text-on-primary text-on-surface font-semibold">
+            chose file from your stock
+          </p>
           <input class="hidden" type="file " name="" id="" />
         </div>
         <div class="mt-4">
@@ -196,7 +198,7 @@ const minDate = computed(() => {
           />
           <ul class="mt-5">
             <li
-              class="dark:bg-on-surface mb-1 text-tiny items-center flex justify-between p-4"
+              class="dark:bg-on-surface bg-light-hover font-semibold mb-1 text-tiny items-center flex justify-between p-4"
               v-for="(step, index) in steps"
               :key="step.id"
             >
