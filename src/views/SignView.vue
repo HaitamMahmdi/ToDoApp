@@ -87,7 +87,6 @@ const goToNextPage = async () => {
       );
       if (isSignUp instanceof Error) {
         formSettings.currentPhase = 1;
-        console.log(isSignUp.code);
         formSettings.errorMessages = errorMessages[isSignUp.code];
         return;
       }

@@ -29,7 +29,6 @@ const stepDone = async (stepId, id, status) => {
   const task = tasks.value.find((task) => task.id === id);
   const newRate = task.completionRate + 100 / task.originalStepsCount;
   const newsteps = task.steps.filter((step) => step.objID !== stepId);
-  console.log(task.completionRate);
   await taskStore.updateTask(id, "steps", newsteps);
   if (status != "In Progress") {
     await taskStore.updateTask(id, "status", "In Progress");

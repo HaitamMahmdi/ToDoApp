@@ -44,7 +44,6 @@ export const useTaskeStore = defineStore("taskStore", {
     },
     getFinishedTasks() {
       if (this.tasks) {
-        console.log(this.tasks);
         const arrayOfFinishedTasks = this.tasks.filter(
           (task) => task.status === "done"
         );
@@ -74,7 +73,6 @@ export const useTaskeStore = defineStore("taskStore", {
   },
   actions: {
     async startRealtimeSync() {
-      console.log("SNAPSHOT FIRED 🔥");
       const { user } = await getUserData();
 
       if (user) {
@@ -85,7 +83,6 @@ export const useTaskeStore = defineStore("taskStore", {
           const data = docSnap.data();
           if (data && data.tasks) {
             this.tasks = data.tasks.map((task) => ({ ...task }));
-            console.log(data);
             this.plan = data.plan;
           } else {
             this.tasks = [];
@@ -95,7 +92,6 @@ export const useTaskeStore = defineStore("taskStore", {
     },
     async updatePlane(planeName) {
       const { docRef } = await getUserData();
-      console.log(this.plane);
       this.plane = planeName;
       await updateDoc(docRef, {
         plan: planeName,
@@ -160,8 +156,6 @@ export const useTaskeStore = defineStore("taskStore", {
         await updateDoc(docRef, {
           tasks: updatedTasks,
         });
-
-        console.log(`✅ Task with ID ${ID} updated: [${key}] =`, newVal);
       } catch (err) {
         console.error(`❌ Failed to update task:`, err.message, err);
       }
