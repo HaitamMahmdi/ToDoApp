@@ -19,7 +19,7 @@ const steps = ref([]);
 const category = ref("");
 const color = ref("#DDD");
 const step = ref("");
-
+const isTaskAdd = ref(false);
 const isvalidInput = reactive({
   taskName: null,
   category: null,
@@ -41,7 +41,6 @@ const pushNewTask = async () => {
   if (!isvalidInput.taskName || !isvalidInput.category || !isvalidInput.step) {
     return;
   } else {
-    console.log(color.value);
     try {
       await taskStore.addTasks(
         teskName.value,
@@ -54,7 +53,10 @@ const pushNewTask = async () => {
         "",
         color.value
       );
-      console.log(`task add`);
+      isTaskAdd.value = true;
+      setTimeout(() => {
+        isTaskAdd.value = false;
+      }, 1500);
     } catch (error) {
       console.error("Failed to add task:", error);
     }
@@ -228,6 +230,9 @@ const minDate = computed(() => {
           value="Reset"
         />
       </div>
+      <p v-if="isTaskAdd" class="text-2xl font-semibold text-success">
+        ✅ task added successfully
+      </p>
     </form>
   </section>
 </template>

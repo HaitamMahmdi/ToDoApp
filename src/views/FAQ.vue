@@ -78,7 +78,9 @@ const firstHalf = faq.slice(0, 6);
 const secondHalf = faq.slice(6);
 </script>
 <template>
-  <div class="container mx-auto my-20 flex flex-wrap justify-center">
+  <div
+    class="container md:w-[calc(100%-256px)] w-full px-5 h-full mx-auto my-20 flex flex-wrap justify-center"
+  >
     <h1
       class="text-[clamp(2rem,5vw,4rem)] mb-3 text-center w-full dark:text-on-primary font-bold"
     >

@@ -11,7 +11,13 @@ import {
   reauthenticateWithCredential,
   signOut,
 } from "@firebase/auth";
-import { getFirestore, doc, setDoc, deleteDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { useTaskeStore } from "./TaskStore";
 import app from "../firebase";
 import { getUserData } from "../utilities/getUserData";
@@ -28,9 +34,9 @@ export const useAuthStore = defineStore("authStore", {
           auth,
           (user) => {
             this.user = user;
-            this.isAuthReady = true;
-            unsubscribe(); // stop listening after first call
-            resolve(user); // ✅ now it's awaitable
+
+            unsubscribe();
+            resolve(user);
           },
           reject
         );
@@ -50,6 +56,7 @@ export const useAuthStore = defineStore("authStore", {
         await setDoc(docRef, {
           tasks: [],
           theme: "light",
+          plan: "Basic Plan",
         });
 
         this.user = userCred.user;
@@ -147,6 +154,7 @@ export const useAuthStore = defineStore("authStore", {
         }
       }
     },
+
     async logOut() {
       const auth = getAuth();
       const taskStore = useTaskeStore();

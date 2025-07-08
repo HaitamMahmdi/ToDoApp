@@ -50,7 +50,10 @@ const taskIsFailed = async (id) => {
     v-if="tasks?.length"
     class="container md:w-[calc(100%-256px)] min-h-[100vh] flex flex-wrap gap-1.5 justify-center md:p-4 relative mx-auto"
   >
-    <div v-if="todayTasks?.length" class="w-full flex h-fit flex-wrap">
+    <div
+      v-if="todayTasks?.length"
+      class="w-full flex h-fit justify-center items-center flex-wrap"
+    >
       <h2
         class="text-[clamp(2.5rem,5vw,3rem)] h-fit mb-10 ml-5 font-bold w-full dark:text-on-primary"
       >
@@ -79,16 +82,16 @@ const taskIsFailed = async (id) => {
         :task="showInfoOf"
       />
     </div>
-
+    <h2
+      v-if="tasks.length !== todayTasks?.length"
+      class="text-[clamp(2.5rem,5vw,3rem)] h-fit mb-10 ml-5 font-bold w-full dark:text-on-primary"
+    >
+      coming tasks
+    </h2>
     <div
       v-if="tasks.length !== todayTasks?.length"
-      class="w-full flex flex-wrap h-fit"
+      class="w-full flex flex-wrap h-fit justify-center items-center"
     >
-      <h2
-        class="text-[clamp(2.5rem,5vw,3rem)] h-fit mb-10 ml-5 font-bold w-full dark:text-on-primary"
-      >
-        coming tasks
-      </h2>
       <TaskCom
         @show-info="
           (n) => {

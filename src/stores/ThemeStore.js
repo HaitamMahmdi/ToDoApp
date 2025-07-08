@@ -5,7 +5,7 @@ const htmlRoot = document.getElementById(`html`);
 
 export const useThemeStore = defineStore("themeStore", {
   state: () => ({
-    theme: null,
+    theme: "light",
   }),
   actions: {
     async getTheme() {

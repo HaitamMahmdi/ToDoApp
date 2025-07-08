@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "../stores/AuthStore";
 import SignView from "../views/SignView.vue";
 import Home from "../views/Home.vue";
 
@@ -16,6 +17,7 @@ const routes = [
   {
     name: "index",
     path: "/index",
+    meta: { requiresAuth: true },
     component: () => import("../views/dashbord/index.vue"),
     children: [
       {
@@ -33,18 +35,40 @@ const routes = [
         name: "tasks",
         component: () => import("../views/dashbord/TasksView.vue"),
       },
+      {
+        name: `faq`,
+        path: `faq`,
+        component: () => import("@/views/FAQ.vue"),
+      },
     ],
   },
+
   {
-    name: `faq`,
-    path: `/faq`,
-    component: () => import("@/views/FAQ.vue"),
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: () => import("@/views/404.vue"),
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  linkActiveClass: " dark:bg-on-surface bg-light-secondary",
 });
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
+  await authStore.checkAuth();
+  const isLoggedIn = !!authStore.user;
 
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const guestOnly = to.matched.some((record) => record.meta.guestOnly);
+
+  if (requiresAuth && !isLoggedIn) {
+    next("/SignView");
+  } else if (guestOnly && isLoggedIn) {
+    next("/index");
+  } else {
+    next();
+  }
+});
 export default router;

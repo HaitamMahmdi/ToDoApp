@@ -3,7 +3,6 @@
  */
 
 import { defineStore } from "pinia";
-import { useAuthStore } from "./AuthStore";
 import { getUserData } from "../utilities/getUserData";
 import {
   getFirestore,
@@ -14,7 +13,8 @@ import {
 } from "firebase/firestore";
 export const useTaskeStore = defineStore("taskStore", {
   state: () => ({
-    tasks: null,
+    tasks: [],
+    plan: null,
   }),
   getters: {
     getTodayTasks() {
@@ -33,12 +33,49 @@ export const useTaskeStore = defineStore("taskStore", {
         return todyTasks;
       }
     },
+    getFailedTasks() {
+      if (this.tasks) {
+        const arrayOfFailedTasks = this.tasks.filter(
+          (el) => el.status === "failed"
+        );
+        return arrayOfFailedTasks;
+      }
+      return [];
+    },
+    getFinishedTasks() {
+      if (this.tasks) {
+        console.log(this.tasks);
+        const arrayOfFinishedTasks = this.tasks.filter(
+          (task) => task.status === "done"
+        );
+        return arrayOfFinishedTasks;
+      }
+      return [];
+    },
+
+    getNotStartedTasks() {
+      if (this.tasks) {
+        const arrayOfNotStartedTasks = this.tasks.filter(
+          (el) => el.status === "not started"
+        );
+        return arrayOfNotStartedTasks;
+      }
+      return [];
+    },
+    getInProgressTasks() {
+      if (this.tasks) {
+        const arrayOfInProgressTasks = this.tasks.filter(
+          (el) => el.status === "In Progress"
+        );
+        return arrayOfInProgressTasks;
+      }
+      return [];
+    },
   },
   actions: {
     async startRealtimeSync() {
       console.log("SNAPSHOT FIRED 🔥");
-      const authStore = useAuthStore();
-      const user = authStore.user;
+      const { user } = await getUserData();
 
       if (user) {
         const db = getFirestore();
@@ -47,12 +84,22 @@ export const useTaskeStore = defineStore("taskStore", {
         onSnapshot(docRef, (docSnap) => {
           const data = docSnap.data();
           if (data && data.tasks) {
-            this.tasks = data.tasks.map((task) => ({ ...task })); // deep clone
+            this.tasks = data.tasks.map((task) => ({ ...task }));
+            console.log(data);
+            this.plan = data.plan;
           } else {
             this.tasks = [];
           }
         });
       }
+    },
+    async updatePlane(planeName) {
+      const { docRef } = await getUserData();
+      console.log(this.plane);
+      this.plane = planeName;
+      await updateDoc(docRef, {
+        plan: planeName,
+      });
     },
     async addTasks(
       taskName = null,
@@ -90,10 +137,8 @@ export const useTaskeStore = defineStore("taskStore", {
           id: crypto.randomUUID(),
         }),
       });
-      console.log(`task add`);
     },
     async updateTask(ID, key, newVal) {
-      console.log(ID);
       try {
         const { docRef, data } = await getUserData();
         const arr = data.tasks || [];
@@ -106,7 +151,7 @@ export const useTaskeStore = defineStore("taskStore", {
         const updatedTask = {
           ...arr[index],
           [key]: newVal,
-          updatedAt: new Date().toISOString(), // لضمان التحديث في Firestore
+          updatedAt: new Date().toISOString(),
         };
 
         const updatedTasks = [...arr];

@@ -34,7 +34,11 @@ const showOptions = ref(false);
 const buttonShowOptions = ref(null);
 let cleanheandler;
 
-if (+taskobj.inProgressAt.split("-")[2] > +taskobj.deadline.split("-")[2]) {
+if (
+  +taskobj.inProgressAt.split("-")[2] < +new Date().getDate() ||
+  taskobj?.deadline.split("-")[2] < +new Date().getDate()
+) {
+  console.log(taskobj);
   taskobj.status = `failed`;
   emit("taskIsFailed", taskobj.id);
 }
@@ -69,9 +73,10 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
 </script>
 <template>
   <div
+    v-if="taskobj.status !== 'done'"
     :id="`taskCard-${id}`"
     v-bind="$attrs"
-    class="dark:bg-on-surface text-light-surface bg-light-secondary h-fit max-sm:p-5 flex mx-4 flex-wrap dark:text-on-primary justify-between mb-5 md:min-w-96"
+    class="dark:bg-on-surface md:min-w-96 text-light-surface bg-light-secondary h-fit max-sm:p-5 flex mx-4 flex-wrap dark:text-on-primary justify-between mb-5"
   >
     <div class="py-1 px-1 flex flex-col justify-center grow">
       <div class="flex items-center flex-wrap">
@@ -156,8 +161,8 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
             <li
               @click="startTask"
               v-if="
-                taskobj.status !== 'done' &&
-                taskobj.status !== 'In Progress ' &&
+                taskobj.status != 'done' &&
+                taskobj.status !== 'In Progress' &&
                 taskobj.status != 'failed'
               "
               class="flex items-center cursor-pointer py-2 px-4 hover:bg-primary"
@@ -225,7 +230,7 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
       </ul>
     </div>
 
-    <div class="w-25 ml-2 max-sm:w-full rounded-r-2xl overflow-hidden">
+    <div class="w-25 ml-2 max-sm:w-full overflow-hidden">
       <img src="../../assets/taskImage.jpg" class="w-full h-full" alt="" />
     </div>
     <ul
