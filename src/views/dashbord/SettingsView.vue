@@ -96,8 +96,8 @@ const submitNewPassword = async () => {
                   class="w-16 h-16 rounded-full cursor-pointer m-3"
                   :src="
                     imageName
-                      ? `/public/user_default_profile_image/${imageName}.jpg `
-                      : '/public/user_default_profile_image/defualt.jpg'
+                      ? `/user_default_profile_image/${imageName}.jpg `
+                      : '/user_default_profile_image/defualt.jpg'
                   "
                   alt=""
                 />

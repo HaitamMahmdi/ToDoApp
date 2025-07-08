@@ -66,8 +66,8 @@ watch(
               class="w-20 h-20 rounded-full"
               :src="
                 user
-                  ? `/public/user_default_profile_image/${user.photoURL}.jpg `
-                  : '/public/user_default_profile_image/defualt.jpg'
+                  ? `/user_default_profile_image/${user.photoURL}.jpg `
+                  : '/user_default_profile_image/defualt.jpg'
               "
               alt=""
             />
@@ -164,8 +164,8 @@ watch(
                 class="w-16 h-16 mx-auto sm:mx-0 rounded-full"
                 :src="
                   profileImage
-                    ? ` /public/user_default_profile_image/${profileImage}.jpg`
-                    : '/public/user_default_profile_image/defualt.jpg'
+                    ? ` /user_default_profile_image/${profileImage}.jpg`
+                    : '/user_default_profile_image/defualt.jpg'
                 "
                 alt=""
               />

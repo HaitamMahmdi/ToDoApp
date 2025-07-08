@@ -51,7 +51,6 @@ import {
   faRedditAlien,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { useAuthStore } from "./stores/AuthStore";
 library.add(
   faPhone,
   faXmark,
@@ -92,9 +91,7 @@ library.add(
   faTelegram,
   faRedditAlien
 );
-const authStore = useAuthStore();
 
-const a = await authStore.checkAuth();
 vueApp
   .use(router)
   .use(app)
