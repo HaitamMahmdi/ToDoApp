@@ -1,7 +1,6 @@
 <script setup>
 /**
  *! The feedback obj is temp
- *? Maybe make a saparate component for card ?
  * */
 
 const feedbacks = [
@@ -29,11 +28,15 @@ const feedbacks = [
 </script>
 <template>
   <div
-    class="relative p-4 text-on-primary animate-scroll text-center min-w-64 h-60 flex flex-col items-center justify-center"
+    class="relative p-4 dark:text-on-primary animate-scroll text-center min-w-64 h-60 flex flex-col items-center justify-center"
     v-for="(feedback, index) in feedbacks"
     :key="index"
     id="card"
-    :class="Number.isInteger(index / 2) ? 'bg-surface' : 'bg-on-surface'"
+    :class="
+      Number.isInteger(index / 2)
+        ? 'dark:bg-surface bg-light-secondary '
+        : 'dark:bg-on-surface bg-light-primary'
+    "
   >
     <p class="mb-5">{{ feedback.reaction }}</p>
     <h4 class="font-bold text-4xl">{{ feedback.company }}</h4>

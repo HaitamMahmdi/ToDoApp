@@ -7,10 +7,12 @@
 import { useRouter } from "vue-router";
 import SliderCom from "../components/SliderCom.vue";
 import { useAuthStore } from "../stores/AuthStore";
+import PlanComponent from "../components/PlanComponent.vue";
+import ContactUsCom from "@/components/ContactUsCom.vue";
 const authStore = useAuthStore();
 authStore.checkAuth();
+const router = useRouter();
 if (authStore.user) {
-  const router = useRouter();
   router.push("/index");
 }
 </script>
@@ -46,5 +48,28 @@ if (authStore.user) {
     class="flex overflow-x-hidden animate- w-[calc(256px*20)]"
   >
     <SliderCom></SliderCom>
+  </section>
+  <section class="container mx-auto">
+    <section id="selectPlan" class="my-10 py-10">
+      <h2
+        class="dark:text-on-primary text-center font-bold text-[clamp(2.5rem,5vw,4rem)]"
+      >
+        --- select a plan ---
+      </h2>
+      <PlanComponent></PlanComponent>
+    </section>
+    <section id="aboutUs" class="dark:text-on-primary my-10 py-10">
+      <h2 class="text-center font-bold mb-2 text-[clamp(2.5rem,5vw,4rem)]">
+        --- about us ---
+      </h2>
+      <p class="text-4xl text-center max-w-4xl mx-auto">
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Obcaecati vel
+        quia nulla nobis alias mollitia illo impedit ipsum, hic porro provident
+        dolorum repellat non error culpa nostrum corporis? Facilis, sit.
+      </p>
+    </section>
+    <section id="contactUs" class="mb-10 mt-20">
+      <ContactUsCom />
+    </section>
   </section>
 </template>

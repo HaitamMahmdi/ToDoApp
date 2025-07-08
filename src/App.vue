@@ -48,7 +48,7 @@ watch(
         <div>
           <button
             @click="themeStore.toggleTheme"
-            class="text-on-primary ml-5 text-2xl"
+            class="text-on-primary cursor-pointer ml-5 text-2xl"
           >
             <font-awesome-icon
               v-if="themeStore.theme === 'light'"

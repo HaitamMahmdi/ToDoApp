@@ -36,13 +36,27 @@ const routes = [
         component: () => import("../views/dashbord/TasksView.vue"),
       },
       {
-        name: `faq`,
-        path: `faq`,
+        name: `faqs`,
+        path: `faqs`,
         component: () => import("@/views/FAQ.vue"),
+      },
+      {
+        name: `contactUs`,
+        path: `contactUs`,
+        component: () => import("@/views/dashbord/ContactUsView.vue"),
+      },
+      {
+        name: `aboutUs`,
+        path: `/aboutUs`,
+        component: () => import("@/views/AboutUs.vue"),
       },
     ],
   },
-
+  {
+    name: `faq`,
+    path: `/faq`,
+    component: () => import("@/views/FAQ.vue"),
+  },
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
@@ -54,6 +68,15 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   linkActiveClass: " dark:bg-on-surface bg-light-secondary",
+  scrollBehavior(to) {
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: "smooth",
+      };
+    }
+    return { top: 0 };
+  },
 });
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();

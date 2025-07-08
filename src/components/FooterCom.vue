@@ -1,11 +1,16 @@
-<script></script>
+<script setup>
+import { computed } from "vue";
+import { useAuthStore } from "../stores/AuthStore";
+const authStore = useAuthStore();
+const user = computed(() => authStore.user);
+</script>
 <template>
   <footer class="dark:bg-on-surface bg-light-secondary w-full pt-10">
     <div class="container p-4 mx-auto">
-      <ul>
+      <ul class="flex items-center flex-wrap">
         <li>
           <img src="../assets/Component 1.png" width="64px" alt="" />
-          <p class="dark:text-on-primary md:w-md my-5 text-[18px]">
+          <p class="text-on-primary md:w-md font-semibold my-5 text-[18px]">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius,
             dolorem quod nesciunt sapiente perferendis a nulla minima
             repudiandae, placeat,
@@ -34,6 +39,81 @@
                 icon="fa-brands fa-telegram"
                 class="text-[#229ED9]"
               />
+            </li>
+          </ul>
+        </li>
+        <li class="grow">
+          <ul class="text-on-primary w-full">
+            <li>
+              <RouterLink
+                v-if="!user"
+                class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
+                to="/"
+                >Home</RouterLink
+              >
+              <RouterLink
+                v-else
+                class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
+                to="/index"
+                >go to dashbord</RouterLink
+              >
+            </li>
+            <li v-if="!user">
+              <RouterLink
+                class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
+                to="/SignView"
+                >sign Up</RouterLink
+              >
+            </li>
+
+            <li>
+              <RouterLink
+                v-if="!user"
+                class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
+                to="/#contactUs"
+                >contactUs</RouterLink
+              >
+              <RouterLink
+                v-else
+                class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
+                to="/index/contactUs"
+                >contactUs</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink
+                v-if="user"
+                class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
+                to="/aboutUS"
+                >about US</RouterLink
+              >
+              <RouterLink
+                v-else
+                class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
+                to="/#aboutUs"
+                >about US</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink
+                class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
+                to="/faq"
+                >FAQ</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink
+                v-if="!user"
+                class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
+                to="/#selectPlan"
+                >select Plan</RouterLink
+              >
+              <RouterLink
+                v-else
+                class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
+                to="/index"
+                >select Plan</RouterLink
+              >
             </li>
           </ul>
         </li>

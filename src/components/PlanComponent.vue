@@ -88,6 +88,12 @@ const payPlans = [
                 : "click me"
             }}
           </button>
+          <Router-link
+            class="text-2xl cursor-pointer bg-Clickable py-4 px-8"
+            v-else
+            to="/SignView"
+            >click me</Router-link
+          >
         </div>
       </div>
     </div>

@@ -115,13 +115,26 @@ const changProfileImage = (e) => {
     userImage.value.src = `/user_default_profile_image/${inputVal.profileImage}.jpg`;
   }
 };
+const changColor = (e) => {
+  const target = e.currentTarget;
+  const isClicked = target.dataset.clicked === "false" ? false : true;
+  if (!isClicked) {
+    target.classList.replace("text-black", "text-on-primary");
+    target.classList.replace("bg-gray-300", "bg-primary");
+    target.dataset.clicked = `true`;
+  } else {
+    target.classList.replace("text-on-primary", "text-black");
+    target.classList.replace("bg-primary", "bg-gray-300");
+    target.dataset.clicked = `false`;
+  }
+};
 
 watch(user, () => {
   isFinished.value = true;
 
   setTimeout(() => {
     router.push("/index");
-  }, 200);
+  }, 1000);
 });
 </script>
 
@@ -141,7 +154,7 @@ watch(user, () => {
     </div>
   </div>
   <div class="container max-sm:w-full mx-auto mt-5">
-    <div class="w-fit mx-auto flex justify-center">
+    <div class="md:w-fit w-full mx-auto flex justify-center">
       <form
         v-if="formSettings.currentPhase != 'completed'"
         @submit.prevent
@@ -160,7 +173,7 @@ watch(user, () => {
             v-if="formSettings.currentPhase === 1"
             id="firstPhase"
             ref="firstPhase"
-            class="relative left-0"
+            class="relative left-0 md:w-fit w-full"
           >
             <div class="w-full sm:w-md relative mx-auto"></div>
             <InputComponent
@@ -465,7 +478,7 @@ watch(user, () => {
               <p class="">Go Back</p>
             </button>
           </div>
-          <div class="flex items-center justify-center">
+          <div class="flex items-center mt-10 justify-center">
             <div
               :class="[
                 formSettings.currentPhase === 1

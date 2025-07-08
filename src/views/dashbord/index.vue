@@ -114,7 +114,7 @@ watch(
           <li class="w-full">
             <RouterLink
               class="flex items-center px-5 py-4 dark:hover:bg-on-surface hover:bg-light-secondary"
-              :to="{ name: `faq` }"
+              :to="{ name: `faqs` }"
             >
               <font-awesome-icon icon="circle-info" />
               <p class="ml-2">FAQ</p>
