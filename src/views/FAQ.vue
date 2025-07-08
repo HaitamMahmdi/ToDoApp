@@ -5,48 +5,43 @@ const themeStore = useThemeStore();
 const faq = reactive([
   {
     question: "How do I create a new task?",
-    answer:
-      "Click the 'Add' or '+' button, type your task, and press Enter or Save.",
+    answer: "in the add tasks page for logged-in users.",
     showAnswer: false,
   },
   {
     question: "Can I edit a task after I create it?",
-    answer: "Yes, click the task text or the edit icon to modify it.",
+    answer: "no ",
     showAnswer: false,
   },
   {
     question: "How do I delete a task I don’t need anymore?",
-    answer:
-      "Click the trash icon or swipe left/right (on mobile) to delete the task.",
+    answer: "Click the 3 dot icon and select delete ",
     showAnswer: false,
   },
   {
     question: "Can I mark a task as done?",
-    answer: "Yes, click the checkbox next to the task to mark it as completed.",
+    answer: "Yes, Click the 3 dot icon and mark it as done.",
     showAnswer: false,
   },
   {
     question: "Where did my tasks go?",
     answer:
-      "Refresh the app, check your login account, or see the 'Completed' or 'Archived' sections.",
+      "Refresh the app, check your login account, or see the 'Completed' sections.",
     showAnswer: false,
   },
   {
     question: "Can I undo a deleted task?",
-    answer:
-      "Some apps offer undo for a few seconds. Otherwise, deletion is usually permanent unless archived.",
+    answer: "no",
     showAnswer: false,
   },
   {
     question: "How do I organize tasks by date or priority?",
-    answer:
-      "Use the sort or filter options, or drag and drop to reorder your tasks.",
+    answer: "you can't for now",
     showAnswer: false,
   },
   {
     question: "Can I set reminders or due dates?",
-    answer:
-      "Yes, look for a calendar or clock icon when creating or editing a task.",
+    answer: "no",
     showAnswer: false,
   },
   {
@@ -57,14 +52,12 @@ const faq = reactive([
   },
   {
     question: "Can I create categories or folders?",
-    answer:
-      "Yes, most apps allow lists, projects, or tags to organize your tasks.",
+    answer: "Yes and no",
     showAnswer: false,
   },
   {
     question: "Is there a dark mode?",
-    answer:
-      "Check the app settings — dark mode is usually available for better night-time visibility.",
+    answer: "yes",
     showAnswer: false,
   },
   {
