@@ -24,7 +24,7 @@ const yourGender = (e) => {
 };
 
 const imageNames = [
-  "defualt",
+  "default",
   "cat",
   "camionnette",
   "camionnette_Night",
