@@ -6,6 +6,7 @@ import { computed, reactive, ref, watch } from "vue";
 import { useAuthStore } from "../stores/AuthStore";
 import InputComponent from "../components/InputComponent.vue";
 import { useRouter } from "vue-router";
+const base = import.meta.env.BASE_URL;
 const router = useRouter();
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
@@ -38,7 +39,7 @@ const inputVal = reactive({
     val: "",
     isValidVal: null,
   },
-  profileImage: "s",
+  profileImage: "",
 });
 const errorMessages = {
   "auth/email-already-in-use":
@@ -111,7 +112,7 @@ const changProfileImage = (e) => {
   const target = e.target;
   if (userImage.value) {
     inputVal.profileImage = target.dataset.imagename;
-    userImage.value.src = `/user_default_profile_image/${inputVal.profileImage}.jpg`;
+    userImage.value.src = `${base}user_default_profile_image/${inputVal.profileImage}.jpg`;
   }
 };
 const changColor = (e) => {

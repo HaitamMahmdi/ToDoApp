@@ -6,6 +6,8 @@
 import { useAuthStore } from "../../stores/AuthStore";
 import { computed, ref, watch } from "vue";
 import InputComponent from "../../components/InputComponent.vue";
+const base = import.meta.env.BASE_URL;
+
 const authStore = useAuthStore();
 authStore.checkAuth();
 const user = computed(() => authStore.user);
@@ -77,8 +79,8 @@ const submitNewPassword = async () => {
                 class="rounded-full w-16 h-16"
                 :src="
                   profileImage
-                    ? `/public/user_default_profile_image/${profileImage}.jpg `
-                    : '/public/user_default_profile_image/defualt.jpg'
+                    ? `${base}public/user_default_profile_image/${profileImage}.jpg `
+                    : `${base}public/user_default_profile_image/defualt.jpg`
                 "
                 alt=""
               />
@@ -96,8 +98,8 @@ const submitNewPassword = async () => {
                   class="w-16 h-16 rounded-full cursor-pointer m-3"
                   :src="
                     imageName
-                      ? `/user_default_profile_image/${imageName}.jpg `
-                      : '/user_default_profile_image/defualt.jpg'
+                      ? `${base}user_default_profile_image/${imageName}.jpg `
+                      : `${base}user_default_profile_image/defualt.jpg`
                   "
                   alt=""
                 />

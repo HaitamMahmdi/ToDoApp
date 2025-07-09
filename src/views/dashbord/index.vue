@@ -6,6 +6,7 @@ import { useThemeStore } from "../../stores/ThemeStore";
 import { useTaskeStore } from "../../stores/TaskStore";
 import PlanComponent from "@/components/PlanComponent.vue";
 import PercentageCircleCom from "../../components/PercentageCircleCom.vue";
+const base = import.meta.env.BASE_URL;
 const TaskStore = useTaskeStore();
 const tasks = computed(() => TaskStore.tasks);
 const todayTasks = computed(() => TaskStore?.getTodayTasks);
@@ -66,8 +67,8 @@ watch(
               class="w-20 h-20 rounded-full"
               :src="
                 user
-                  ? `/user_default_profile_image/${user.photoURL}.jpg `
-                  : '/user_default_profile_image/defualt.jpg'
+                  ? `${base}user_default_profile_image/${user.photoURL}.jpg `
+                  : `${base}user_default_profile_image/defualt.jpg`
               "
               alt=""
             />
@@ -79,7 +80,7 @@ watch(
           </RouterLink>
         </div>
         <h2 class="mt-3 text-[1.2rem] font-semibold">
-          {{ user ? user.displayName : `hello` }}
+          {{ user ? user.displayName : `haitam` }}
         </h2>
       </div>
 
@@ -164,8 +165,8 @@ watch(
                 class="w-16 h-16 mx-auto sm:mx-0 rounded-full"
                 :src="
                   profileImage
-                    ? ` /user_default_profile_image/${profileImage}.jpg`
-                    : '/user_default_profile_image/defualt.jpg'
+                    ? ` ${base}user_default_profile_image/${profileImage}.jpg`
+                    : `${base}user_default_profile_image/defualt.jpg`
                 "
                 alt=""
               />

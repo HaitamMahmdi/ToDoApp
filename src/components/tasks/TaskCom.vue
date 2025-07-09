@@ -231,7 +231,7 @@ const color = isColorCloseToWhite(taskobj.categoryColor, 240);
     </div>
 
     <div class="w-25 ml-2 max-sm:w-full overflow-hidden">
-      <img src="../../assets/taskImage.jpg" class="w-full h-full" alt="" />
+      <img src="@/assets/taskImage.jpg" class="w-full h-full" alt="" />
     </div>
     <ul
       class="mt-5 text-center px-1 max-sm:flex w-full hidden text-[12px] justify-between"
