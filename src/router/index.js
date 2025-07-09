@@ -45,17 +45,17 @@ const routes = [
         path: `contactUs`,
         component: () => import("@/views/dashbord/ContactUsView.vue"),
       },
-      {
-        name: `aboutUs`,
-        path: `/aboutUs`,
-        component: () => import("@/views/AboutUs.vue"),
-      },
     ],
   },
   {
     name: `faq`,
     path: `/faq`,
     component: () => import("@/views/FAQ.vue"),
+  },
+  {
+    name: `aboutUs`,
+    path: `/aboutUs`,
+    component: () => import("@/views/AboutUs.vue"),
   },
   {
     path: "/:pathMatch(.*)*",

@@ -82,13 +82,7 @@ const user = computed(() => authStore.user);
             </li>
             <li>
               <RouterLink
-                v-if="user"
-                class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
-                to="/aboutUS"
-                >about US</RouterLink
-              >
-              <RouterLink
-                v-else
+                v-if="!user"
                 class="py-4 block duration-100 font-semibold hover:bg-light-primary px-4"
                 to="/#aboutUs"
                 >about US</RouterLink

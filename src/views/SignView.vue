@@ -131,10 +131,9 @@ const changColor = (e) => {
 
 watch(user, () => {
   isFinished.value = true;
-
   setTimeout(() => {
     router.push("/index");
-  }, 1000);
+  }, 2000);
 });
 </script>
 
@@ -153,10 +152,9 @@ watch(user, () => {
       />
     </div>
   </div>
-  <div class="container max-sm:w-full mx-auto mt-5">
+  <div v-if="!isFinished" class="container max-sm:w-full mx-auto mt-5">
     <div class="md:w-fit w-full mx-auto flex justify-center">
       <form
-        v-if="formSettings.currentPhase != 'completed'"
         @submit.prevent
         @keydown.enter.prevent
         novalidate
@@ -349,7 +347,7 @@ watch(user, () => {
             </div>
           </div>
           <div
-            v-if="formSettings.currentPhase === 3"
+            v-if="formSettings.currentPhase >= 3"
             ref="thirdPhase"
             id="thirdPhase"
             class=""
