@@ -79,8 +79,8 @@ const submitNewPassword = async () => {
                 class="rounded-full w-16 h-16"
                 :src="
                   profileImage
-                    ? `${base}public/user_default_profile_image/${profileImage}.jpg `
-                    : `${base}public/user_default_profile_image/default.jpg`
+                    ? `${base}user_default_profile_image/${profileImage}.jpg `
+                    : `${base}user_default_profile_image/default.jpg`
                 "
                 alt=""
               />

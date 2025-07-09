@@ -381,7 +381,7 @@ watch(user, () => {
                 <li>
                   <img
                     @click="changProfileImage"
-                    data-imagename="defult"
+                    data-imagename="default"
                     class="w-16 h-16 rounded-full mx-5 md:mt-0 cursor-pointer mt-3"
                     src="/user_default_profile_image/default.jpg"
                     alt=""
