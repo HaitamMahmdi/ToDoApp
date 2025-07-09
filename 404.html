@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Redirecting</title>
     <script>
-      const path = location.pathname.replace(/^\/ToDoApp/, "");
-      const newUrl = "/ToDoApp/" + path + location.search + location.hash;
-      location.replace(newUrl);
+      (function () {
+        const base = "/ToDoApp"; // your GitHub repo name
+        const path = window.location.pathname.replace(
+          new RegExp(`^${base}`),
+          ""
+        );
+        const newUrl =
+          base + path + window.location.search + window.location.hash;
+        window.location.replace(newUrl);
+      })();
     </script>
   </head>
   <body></body>
