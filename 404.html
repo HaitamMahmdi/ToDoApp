@@ -6,14 +6,24 @@
     <title>Redirecting</title>
     <script>
       (function () {
-        const base = "/ToDoApp"; // your GitHub repo name
-        const path = window.location.pathname.replace(
-          new RegExp(`^${base}`),
-          ""
-        );
-        const newUrl =
-          base + path + window.location.search + window.location.hash;
-        window.location.replace(newUrl);
+        const repoName = "/ToDoApp";
+        const currentPath = window.location.pathname;
+
+        // Only redirect if not already on the base path
+        if (!currentPath.startsWith(repoName)) {
+          const cleanPath = currentPath.replace(/^\/+/, ""); // Remove leading slashes
+          const newUrl =
+            repoName +
+            "/" +
+            cleanPath +
+            window.location.search +
+            window.location.hash;
+
+          // Remove duplicate slashes
+          const normalizedUrl = newUrl.replace(/\/+/g, "/");
+
+          window.location.replace(normalizedUrl);
+        }
       })();
     </script>
   </head>
