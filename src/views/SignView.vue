@@ -357,7 +357,7 @@ watch(user, () => {
             <div class="flex flex-col items-center">
               <img
                 ref="userImage"
-                src="/user_default_profile_image/defualt.jpg"
+                src="/user_default_profile_image/default.jpg"
                 alt="userImage"
                 class="w-40 h-40 mb-5 rounded-full"
               />
@@ -383,7 +383,7 @@ watch(user, () => {
                     @click="changProfileImage"
                     data-imagename="defult"
                     class="w-16 h-16 rounded-full mx-5 md:mt-0 cursor-pointer mt-3"
-                    src="/user_default_profile_image/defualt.jpg"
+                    src="/user_default_profile_image/default.jpg"
                     alt=""
                   />
                 </li>

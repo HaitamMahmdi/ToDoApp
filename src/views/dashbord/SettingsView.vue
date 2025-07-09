@@ -80,7 +80,7 @@ const submitNewPassword = async () => {
                 :src="
                   profileImage
                     ? `${base}public/user_default_profile_image/${profileImage}.jpg `
-                    : `${base}public/user_default_profile_image/defualt.jpg`
+                    : `${base}public/user_default_profile_image/default.jpg`
                 "
                 alt=""
               />
