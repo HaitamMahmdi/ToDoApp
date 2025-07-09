@@ -19,22 +19,13 @@ A modern, real-time, and highly interactive task management application built us
 - **Responsive Design**: Fully responsive interface for desktop and mobile.
 - **Persistent Storage**: Tasks are stored on Firestore for logged-in users
 
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v16+ recommended)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
-- Firebase account (if deploying your own backend)
-
-3. **Configure Firebase:**
-   - Copy the example Firebase config in `src/firebase.js` and replace it with your own Firebase project credentials if deploying your own instance.
-
 ## Technologies Used
 
 - [Vue 3](https://vuejs.org/)
 - [Vite](https://vitejs.dev/)
 - [Pinia](https://pinia.vuejs.org/)
 - [Firebase (Firestore, Auth)](https://firebase.google.com/)
-- [Tailwind CSS](https://tailwindcss.com/) (optional, based on class usage)
+- [Tailwind CSS](https://tailwindcss.com/) 
 
 ## Contributing
 
